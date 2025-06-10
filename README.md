@@ -10,5 +10,4 @@
 > ⚠️ This is an **unofficial** and **reverse-engineered** documentation project. It is not affiliated with the original authors or organizations behind FLUX.1.
 
 ## Content
-[Overview] (abstract)
-
+- [Overview](#abstract)
