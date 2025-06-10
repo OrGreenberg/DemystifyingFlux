@@ -1,4 +1,4 @@
-# DemystifyingFlux
+# Demystifying Flux.1
 An unofficial documentation of FLUX.1 text-ti-image architecture
 
 ![image](https://github.com/user-attachments/assets/7136918d-0356-4cca-a516-b88de55bf327)
