@@ -50,6 +50,45 @@ Adaptive Layer Normalization (AdaLN) [^keddous2024vision] is a conditioning mech
 <a name="figure-3"></a>
 
 ---
+## Pipeline Architecture  
+<a name="subsec-arch"></a>
+
+In this section and in [Transformer Architecture](#subsec-transformer), we describe the architecture and sampling pipeline of FLUX.1. For simplicity, we refer to the text-to-image sampling process as being conditioned on a single prompt per sample.
+
+Similar to LDM \cite{rombach2022high}, FLUX operates in a latent space, where the final latent output is decoded to reconstruct the RGB image in pixel space. Following LDM’s approach, the authors trained a convolutional autoencoder from scratch using an adversarial objective, but scaled up the latent representation from 4 channels (in LDM) to 16 channels. A high-level overview of FLUX's sampling pipeline is presented in Figure 4.
+
+The pipeline's inputs are:
+
+- **text:** textual prompt describing the output.
+- **guidance_scale:** controls the strength of conditioning.
+- **num_inference_steps:** how many sampling steps should be performed.
+- **resolution:** what should be the generated image's spatial resolution (height, width).
+
+![Flux pipeline: high-level overview. Just like in Diffusion Models, after pre-processing the noisy latent \(z_t\) (denoted *hidden_state*$_t$) is iteratively refined in the latent space, the final refined \(z_0\) (=\emph{hidden_states}$_0$) is decoded into an RGB image using a pre-trained VAE decoder.](assets/pipeline.jpg)  
+**Figure 4**
+
+Once initiated with those inputs, they are preprocessed as follows:
+
+- **text:** The textual prompt is encoded using two pre-trained text encoders:  
+  - T5: provides dense (per token) embeddings, denoted *encoder hidden states*  
+  - CLIP: provides pooled embeddings (one embedding for the whole prompt, like CLS embedding), denoted *pooled projection*
+
+- **num_inference_steps:** Specifies the total number of sampling steps used during inference. It determines a subset of timesteps from the full diffusion range \(t \in [0:T]\), where typically \(T=1000\). Iterating over these selected timesteps defines the sampling trajectory.
+
+- **resolution:** The desired resolution determines the spatial dimensions of the initial (latent) noise sample \(z_0 \sim \mathcal{N}(0,1)\). It is also used to define the *img_ids* — a set of per-token indicators, pointing at the token's spatial location on a 2D grid. Given a target resolution \((H,W)\) in pixel space, the corresponding latent dimensions \((h,w)\) are computed as \(h = \lfloor H / \text{VAE\_scale} \rfloor\) and \(w = \lfloor W / \text{VAE\_scale} \rfloor\) where \(\text{VAE\_scale}=8\).  
+The image-token grid is further downsampled to dimensions \((h//2, w//2)\), and each token is assigned a unique identifier of the form \((t, \hat{h}, \hat{w})\), where \(\hat{h} \in [0:h-1]\) and \(\hat{w} \in [0:w-1]\), indicating the token’s location on a 2D spatial grid.  
+*text_ids* are initiated using the same structure of *img_ids*, but with \(t = h = w = 0\) for all tokens. Formally, \(\text{text_ids} = n \cdot (0,0,0)\) where \(n\) is the maximal number of tokens in T5 (512).
+
+Let \(\Phi = [\text{encoder\_hidden\_states}, \text{pooled\_projection}, \text{guidance}, \text{img\_ids}, \text{text\_ids}]\) be the pre-processed pipeline inputs. Same as in Diffusion Models, \([z_t, t, \Phi]\) are iteratively fed into the transformer during inference sampling, such that:
+
+\[
+\forall t \in \text{timesteps}: \quad z_{t+\Delta t} = \text{Samp}\bigl(v_\theta(z_t, t, \Phi)\bigr)
+\]
+
+Where \(v_\theta\) is the trainable network that estimates the velocity vector (see [Rectified Flow](#subsec-RF)) and \(\text{Samp}(\cdot)\) refers to the Flow-Matching Euler Discrete sampler \cite{lipman2022flow}. Note that the notation here differs from the one used in Diffusion Models. Here timesteps range between 0 and 1, with \(z_1\) the clear image and \(z_0\) the pure Gaussian noise.
+
+The final clean latent \(z_1\) is decoded via a pre-trained VAE model to get the final image \(x_1\). In the next section, we explore the architecture of \(v_\theta\).
+
 
 ## References
 
