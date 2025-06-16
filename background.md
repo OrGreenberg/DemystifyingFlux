@@ -40,34 +40,33 @@ Most recently, Stable Diffusion 3 (SD3) [8] integrates a diffusion transformer b
 
 While diffusion models (such as DDPMs [4]) learn to predict the noise ($$\epsilon$$) added during a forward diffusion process, Rectified Flow trains a model to predict a velocity vector $v$ that directly points from a noisy point $$x_0$$ (not to be confused with DM notation, where $$x_0$$ denotes the "clear" image) back to the data point $$x_1$$, along a straight interpolation path.
 
-In DMs, the loss is:
+In diffusion models, the network is trained using the epsilon objective, which minimizes the difference between the predicted noise $$\epsilon_\theta(x_t,t)$$ and true noise $$\epsilon$$ added to a sample:
 
 $$
 \mathcal{L}_\epsilon = \mathbb{E}_{x_t,\epsilon,t}\left[  \|\epsilon_\theta(x_t,t) - \epsilon\|^2  \right]
 $$
 
-with:
+where:
 
 $$
 x_t = \sqrt{\alpha_t}x + \sqrt{1 - \alpha_t}\epsilon
 $$
 
-In contrast, Rectified Flow defines:
+represent the noisy image $$x$$ at timestep $$t$$.
 
-$$
-x_t = (1 - t)x_0 + tx_1
-$$
-
-and trains with:
+In contrast, Rectified-Flow defines a deterministic interpolation between the data $$x_1$$ and noise $$x_0$$, and trains the model $$v_\theta$$ to predict the velocity vector between the two:
 
 $$
 \mathcal{L}_v = \mathbb{E}_{x_0,x_1,t}
 \left[ \|v_\theta(x_t,t) - (x_1 - x_0)\|^2 \right]
 $$
 
-This **velocity-based formulation** eliminates the need for iterative noise perturbation and reverse denoising, enabling faster and more stable image synthesis. It also reduces training and inference complexity by solving a simple **ODE**.
+where $$x_t=(1-t)x_0 + tx_1$$ is a linear interpolation between $$x_0 \sim \mathcal{N}(0, I)$$ and $$x_1 \sim p_{data}$$, and $$v(x_t, t)$$ represents the target vector pointing from $$x_0$$ to $$x_1$$. 
 
-> While Rectified Flow is a *training technique* rather than an architectural innovation, its relevance to FLUX lies in the fact that FLUX was trained using this paradigm. Although this report primarily focuses on architectural aspects, we include this subsection to highlight the role Rectified Flow plays in shaping FLUX's performance and convergence behavior.
+
+Unlike diffusion models that rely on stochastic sampling, noise schedules, and denoising objectives, Rectified Flow leverages a velocity-based formulation that defines a deterministic transport path from noise to data. This approach eliminates the need for iterative noise perturbation and reverse denoising, enabling faster and more stable image synthesis. By solving a simple ODE with a learned velocity field, Rectified Flow achieves high-quality generation with significantly reduces complexity in both training and inference—making it a compelling and efficient alternative to traditional diffusion-based methods.
+
+While Rectified Flow is a training technique rather than an architectural innovation, its relevance to FLUX lies in the fact that FLUX was trained using this paradigm. Although this report primarily focuses on architectural aspects, we include this subsection to highlight the role Rectified Flow plays in shaping FLUX's performance and convergence behavior.
 
 ## Transformers
 
