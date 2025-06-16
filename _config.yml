@@ -1,1 +1,20 @@
 
+title: Demystifying Flux.1
+description: Unofficial documentation of FLUX.1 text-to-image architecture
+baseurl: "" # leave empty if served from root (e.g., username.github.io)
+url: "https://OrGreenberg.github.io" # your GitHub Pages URL
+
+theme: minima
+
+# Optional: configure navigation links to your sections
+nav_links:
+  - title: Background
+    url: /background/
+  - title: FLUX.1 Architecture
+    url: /flux-architecture/
+  - title: Models and Tools
+    url: /models-and-tools/
+
+# Enable plugins if needed (GitHub Pages supports a whitelist)
+plugins:
+  - jekyll-feed
