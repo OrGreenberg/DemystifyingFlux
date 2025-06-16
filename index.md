@@ -4,7 +4,7 @@ title: "Demystifying Flux.1"
 permalink: /
 ---
 
-<div align="center">
+<p align="center">
 
 # Demystifying Flux.1  
 **An unofficial documentation of FLUX.1 text-to-image architecture**
@@ -16,9 +16,7 @@ permalink: /
 
 [![arXiv](https://img.shields.io/badge/arXiv-Preprint%20TODO-darkred)](https://arxiv.org/abs/YOUR_PAPER_ID_HERE) <!-- TODO: Update with actual arXiv ID -->
 
-<img src="https://github.com/user-attachments/assets/7136918d-0356-4cca-a516-b88de55bf327" alt="FLUX banner" style="max-width: 100%; margin-top: 1em;" />
-
-</div>
+</p>
 
 ---
 
