@@ -78,22 +78,8 @@ $$
 \text{Attention}(Q, K, V) = \text{softmax}\left( \frac{QK^T}{\sqrt{d_k}} \right)V
 $$
 
-Where:
+Where $$d_k$$ is the dimensionality of keys and the Softmax operation ensures the attention scores sum to 1. This mechanism allows the model to assign different levels of importance to different tokens when computing a new representation for each token in the sequence. In practice, multi-head attention is used, where multiple sets of $Q$/$K$/$V$ projections are computed in parallel to capture diverse types of relationships.
 
-- $d_k$ is the dimensionality of keys.
-- Softmax ensures the attention scores sum to 1.
+For vision tasks, Vision Transformers (ViTs) [17] tokenize an image into fixed-size non-overlapping patches (e.g., $16\times16$ pixels), flatten each patch, and project them into an embedding space. These patch embeddings are then processed by a standard transformer encoder, often with added positional encodings to preserve spatial structure. This enables ViTs to model long-range dependencies across an image without convolutional inductive biases.
 
-Multi-head attention allows different attention patterns to be learned in parallel.
-
-In vision tasks, **Vision Transformers (ViTs)** [17]:
-
-- Tokenize images into fixed-size patches (e.g., 16×16 pixels).
-- Flatten and embed patches.
-- Process them using a transformer encoder with positional encodings.
-
-In text-to-image synthesis, **cross-attention** enables the model to condition generation on textual prompts. Here:
-
-- **Image tokens** act as queries  
-- **Text embeddings** act as keys and values  
-
-This allows semantic conditioning of generated content based on text.
+In text-to-image generation, transformers often use **cross-attention** to condition image synthesis on textual prompts. In this setup, the image tokens (or latent features in the case of latent diffusion) act as queries, while the text embeddings serve as keys and values. This allows the model to modulate image generation based on semantic information from the prompt.
