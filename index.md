@@ -42,7 +42,8 @@ If you find this work useful, please cite our [paper](TODO) and [give this repo 
 ```bibtex
 @InProceedings{TODO,
     title     = {Demystifying Flux Architecture}, 
-    author    = {Or Greenberg},
+    author    = {Or Greenebrg},
     year      = {2025},
     booktitle = {arXiv}
 }
+```
