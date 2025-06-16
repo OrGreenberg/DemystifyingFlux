@@ -1,7 +1,7 @@
 ---
 layout: page
-title: "FLUX.1 Architecture"
-permalink: /flux-architecture/
+title: "Background"
+permalink: /background/
 ---
 
 # FLUX.1 Architecture
