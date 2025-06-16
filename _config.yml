@@ -1,4 +1,18 @@
 title: Demystifying FLUX.1
+description: Unofficial documentation of FLUX.1 text-to-image architecture
 theme: minima
 baseurl: "/DemystifyingFlux"   # important for linking
 url: "https://orgreenberg.github.io"
+
+# Optional: configure navigation links to your sections
+nav_links:
+  - title: Background
+    url: /background/
+  - title: FLUX.1 Architecture
+    url: /flux-architecture/
+  - title: Models and Tools
+    url: /models-and-tools/
+
+# Enable plugins if needed (GitHub Pages supports a whitelist)
+plugins:
+  - jekyll-feed
