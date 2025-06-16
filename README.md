@@ -23,8 +23,8 @@
 
 # 📋 This blog has 3 parts:
 - [1. Background](/background/)
-- [2. FLUX.1 Architecture](/flux-architecture/)
-- [3. Models and Tools](/models-and-tools/)
+- [2. FLUX.1 Architecture](/flux_architecture/)
+- [3. Models and Tools](/models_and_tools/)
   
 
 ## 📝 Citation
