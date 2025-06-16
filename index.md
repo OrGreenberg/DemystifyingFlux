@@ -3,6 +3,7 @@ layout: page
 title:
 permalink: /
 ---
+<div style="text-align: center;">
 
 # Demystifying Flux.1: An unofficial documentation of FLUX.1 text-to-image architecture
 > ⚠️ This is an **unofficial** and **reverse-engineered** documentation project. It is not affiliated with the original authors or organizations behind FLUX.1.
@@ -18,6 +19,7 @@ permalink: /
 [![arXiv](https://img.shields.io/badge/arXiv-Preprint%20TODO-darkred)](https://arxiv.org/abs/YOUR_PAPER_ID_HERE) <!-- TODO: Update with actual arXiv ID --> 
 
 <br/>
+</div>
 
 ![image](https://github.com/user-attachments/assets/7136918d-0356-4cca-a516-b88de55bf327)
 ___
