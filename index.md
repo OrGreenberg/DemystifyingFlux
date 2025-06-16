@@ -20,10 +20,12 @@ permalink: /
 [![arXiv](https://img.shields.io/badge/arXiv-Preprint%20TODO-darkred)](https://arxiv.org/abs/YOUR_PAPER_ID_HERE) <!-- TODO: Update with actual arXiv ID --> 
 
 <br/>
-</div>
+
 
 ![image](https://github.com/user-attachments/assets/7136918d-0356-4cca-a516-b88de55bf327)
-___
+</div>
+
+---
 
 ## 📋 This blog has 3 parts:
 - [1. Background](/DemystifyingFlux/background/)
