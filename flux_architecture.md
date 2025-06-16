@@ -88,7 +88,100 @@ Let \(\Phi = [\text{encoder\_hidden\_states}, \text{pooled\_projection}, \text{g
 Where \(v_\theta\) is the trainable network that estimates the velocity vector (see [Rectified Flow](#subsec-RF)) and \(\text{Samp}(\cdot)\) refers to the Flow-Matching Euler Discrete sampler \cite{lipman2022flow}. Note that the notation here differs from the one used in Diffusion Models. Here timesteps range between 0 and 1, with \(z_1\) the clear image and \(z_0\) the pure Gaussian noise.
 
 The final clean latent \(z_1\) is decoded via a pre-trained VAE model to get the final image \(x_1\). In the next section, we explore the architecture of \(v_\theta\).
+# Transformer
+## \label{subsec:transformer}
 
+The core component of FLUX.1’s synthesis pipeline is the velocity predictor $v_\theta$, which is optimized to estimate the velocity vector along the sampling trajectory (see Section~\ref{subsec:RF}). Similar to SD3 \cite{esser2024scaling}, FLUX.1 replaces the conventional *U-Net* architecture with a fully transformer-based design. A high-level overview of the transformer’s operations at each sampling step is provided in Figure 1. In this section, we describe the primary building blocks that constitute this transformer architecture.
+
+![Flux Transformer: high-level overview](figures/transformer.jpg){#fig:transformer}
+
+### Step Pre-Process
+
+Along the sampling trajectory, the transformer is initiated multiple times, once for each sampling step. Every initialization uses different parameters: 
+
+- The guiding parameter **timestep** is iterated from the pre-calculated list of values between **1** to **0**.
+- **hidden_state** (mostly referred to as $z_t$) is the latent representation which is iteratively refined from Gaussian noise into a clear image. It is updated along the sampling trajectory.
+
+![Flux Transformer: per-step inputs preprocess](figures/t_preprocess.jpg){#fig:t_preprocess}
+
+As a result, the transformer pre-processes its inputs internally as described in Figure 2. Formally, the following steps are taken:
+
+- Use of per-domain linear layers to bring the latent embeddings and dense-prompt-embeddings (T5) into a shared dimensionality of 3072 features per token.
+- Construction of guiding embeds. Unlike Diffusion Models, that encode only the "temporal" information (i.e, timestep) in this phase, FLUX.1 uses both the timestep and the pooled prompt embeds (from CLIP) as guiding embeddings, yet keeps the traditional notation **temb**. It uses sinusoidal projection (as in \cite{ho2020denoising}) to embed the integer values of the timestep and guidance, then applies dedicated linear projection layers to each component to bring them to the shared dimensionality of 3072 features. Finally, the 3 projected embeddings are summed to create the final **temb** (marked in a red block in Figure 2).
+- The **img_ids** and **text_ids** (see Section \ref{subsec:arch}) are concatenated, then used to extract per-token positional embeddings. To extract positional embeddings from 3D token indices $(t,h,w)$, each axis is first converted to a continuous embedding using axis-specific sinusoidal frequencies scaled by a constant $\theta$. The cosine and sine of the resulting frequency-position products are computed and interleaved to form real-valued vectors. These are then concatenated across all axes to produce the final positional embedding as a pair of tensors (cosine and sine), ready to be used in rotary positional encoding (the process is composed in the purple block in Figure 2). Note that this process is not influenced by **timestep** nor **hidden_states**, hence the **pos_embeds** are constant across different sampling steps.
+
+The **pos_embeds** and **temb** parameters are used to support the attention mechanism along the step, while **hidden_states** and **encoder_hidden_states** are processed and refined along the step.
+
+---
+
+### Double Transformer Block
+
+After preprocessing, a series of 19 Double-Transformer blocks are applied. These blocks employ separate weights for image and text tokens. Multi-modality is achieved by applying the attention operation over the concatenation of the tokens (see Figure 3b).
+
+<div style="text-align:center;">
+  
+![Double-Attention Block: latent and prompt embeddings are processed separately, in a standard attention scheme.](figures/double_stream.jpg){#subfig:double}
+
+*Figure 3a: Double-Attention Block: latent and prompt embeddings are processed separately, in a standard attention scheme.*
+
+<br>
+
+![The attention operation is applied over the concatenation of the tokens.](figures/double_attention.jpg){#subfig:double_Attn}
+
+*Figure 3b: The attention operation is applied over the concatenation of the tokens.*
+
+</div>
+
+Each stream (latent and prompt) uses AdaLN layers for normalization and modulation (see Figure 3a). The normalized tensors are used to extract the $K$, $Q$, and $V$ matrices for each domain, which are then concatenated for mixed attention. The concatenated $K$ and $Q$ matrices are rotated using precomputed rotary positional embeddings and passed through the mixed attention operation. The outputs are separated back into their respective streams and alpha-blended with the residual input using the $gate_{\text{msa}}$ parameter extracted by the AdaLN layer. The results are further normalized via a LayerNorm ($LN$) layer and modulated using the $scale_{\text{mlp}}$ and $shift_{\text{mlp}}$ parameters, also extracted by the AdaLN layer, before being passed to the feedforward layer. Finally, the output is alpha-blended with the unnormalized input using the $gate_{\text{mlp}}$ parameter from the AdaLN layer. The entire process is illustrated in Figure 3a.
+
+---
+
+### Single Transformer Block  
+\label{ssec:Single}
+
+After the series of Double-Stream blocks is applied, the processed latent and prompt embeddings are concatenated and fed through a series of Single-Stream blocks.
+
+While the Double-Stream blocks apply different weights for prompt and latent embeddings, the Single-Stream blocks use a single set of weights to process a concatenated tensor of latent and text embeddings (see Figure 4). In addition, the Single-Stream blocks replace the standard sequential attention block (where an MLP, like Feed-Forward, is applied after the attention step), with a parallel mechanism where the attention block and an MLP are computed simultaneously from the same input.
+
+<div style="text-align:center;">
+  
+![Single-Attention Block: latent and prompt embeddings are processed together, in a simultaneous attention scheme.](figures/single_stream.jpg){#subfig:single}
+
+*Figure 4a: Single-Attention Block: latent and prompt embeddings are processed together, in a simultaneous attention scheme.*
+
+<br>
+
+![The $K$, $Q$ and $V$ matrices are computed directly from the concatenated representation.](figures/single_attention.jpg){#subfig:single_Attn}
+
+*Figure 4b: The $K$, $Q$ and $V$ matrices are computed directly from the concatenated representation.*
+
+</div>
+
+---
+
+### Comparison Between Double-Stream and Single-Stream Blocks
+
+| Property           | Double-Stream Block                                                                 | Single-Stream Block                                                           |
+|--------------------|------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
+| **Weight Sharing**  | Uses separate weights for text and latent tokens in both attention and feedforward layers. | Uses shared weights for both text and latent tokens across attention and feedforward layers. |
+| **Parallel Attention** | Parallel attention is used on concatenated latent and prompt embeddings.        | Parallel attention is used on concatenated latent and prompt embeddings.      |
+| **Computation Style**  | Attention and feedforward (MLP) layers are applied sequentially, where the attention's output defines the feedforward's input. | Attention and feedforward layers are computed in parallel using the same input for both. |
+
+*Table 1: Comparison between Double-Stream and Single-Stream blocks in FLUX.1*
+
+Specifically, the Double-Stream and Single-Stream blocks differ in two main attributes: weight sharing between text and latent tokens (shared vs. not shared), and computation style (sequential vs. parallel). While the exact motivation behind the FLUX authors' choice of this specific architecture is not documented, the following is a brief comparison of these attributes, highlighting the possible pros and cons of each, potentially shedding light on the reasoning behind including both block types in FLUX.1's architecture.
+
+#### Weight Sharing (Shared vs. Not Shared)
+
+Weight sharing refers to whether the same attention and feedforward parameters are used for both text and latent tokens. In the Single-Stream block, shared weights enable more efficient parameter usage and promote tighter integration between modalities, which may help the model generalize better across domains. However, this comes at the cost of reduced flexibility, as both token types must be processed identically despite potentially having very different characteristics. In contrast, the Double-Stream block avoids weight sharing, allowing the model to specialize its representations for text and latent tokens independently. This specialization can improve performance when domain-specific distinctions are critical, though it increases model size and computational overhead. The inclusion of both strategies in FLUX.1 suggests a deliberate balance between efficiency and specialization.
+
+#### Computation Style (Sequential vs. Parallel)
+
+The key distinction in computation style lies in how the attention and feedforward (MLP) layers are applied within a block. In the Double-Stream block, the computation is sequential: the input is first normalized, passed through an attention layer, then normalized again before being fed into the feedforward layer. This means the output of the attention block defines the input to the MLP feedforward, enabling tightly coupled, stage-wise processing that allows each layer to build upon the previous one. In contrast, the Single-Stream block follows a parallel design. The input is normalized once, and the resulting representation is simultaneously passed through both the attention and MLP layers independently. Their outputs are then combined downstream. This parallelism increases efficiency and allows for broader representation capacity per block, but it may limit the depth of inter-layer interaction present in sequential designs. FLUX.1's use of both may reflect a trade-off between expressive sequential processing and the speed or simplicity of parallel computation.
+
+---
+
+In summary, Single-Stream blocks emphasize efficiency and simplicity through parallel computation and shared weights, while Double-Stream blocks favor specialization and expressiveness with sequential flow and separate weights. While the Double-Stream blocks follow the *mm-DiT* design previously used in *SD3* \cite{esser2024scaling}, the addition of Single-Stream blocks may reflect the FLUX authors’ intention to expand the model’s capacity in a relatively lightweight and efficient manner.
 
 ## References
 
