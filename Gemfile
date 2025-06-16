@@ -1,21 +1,9 @@
-# frozen_string_literal: true
-
+# Gemfile
 source "https://rubygems.org"
-
-git_source(:github) do |repo_name|
-  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
-  "https://github.com/#{repo_name}.git"
-end
-
-# Jekyll
 gem "jekyll"
 
-# Theme (replace minima with your theme if different)
-gem "minima"
-
-# For Jekyll plugins (like jekyll-feed, jekyll-sitemap, etc.)
 group :jekyll_plugins do
-  # Add any plugins here. Example:
-  # gem "jekyll-feed"
-  # gem "jekyll-sitemap"
+  gem "jekyll-feed"
+  # Add this line if it's not there:
+  gem "jekyll-gfm-admonitions"
 end
