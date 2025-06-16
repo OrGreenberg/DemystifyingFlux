@@ -5,7 +5,8 @@ permalink: /
 ---
 <div style="text-align: center;">
 
-# Demystifying Flux.1: An unofficial documentation of FLUX.1 text-to-image architecture
+# Demystifying Flux.1
+## An unofficial documentation of FLUX.1 text-to-image architecture
 > ⚠️ This is an **unofficial** and **reverse-engineered** documentation project. It is not affiliated with the original authors or organizations behind FLUX.1.
 
 [Or Greenberg](https://OrGreenberg.github.io)<sup>1,2</sup>&nbsp;&nbsp;&nbsp;
