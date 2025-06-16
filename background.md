@@ -4,22 +4,13 @@ title: "Background"
 permalink: /background/
 ---
 
-# Background
-
 To better understand the foundations of **FLUX**, we briefly present several key models and methods that preceded it and influenced its design. This overview is intentionally high-level, aiming only to provide the essential background necessary to grasp the core principles behind FLUX. For readers interested in a deeper exploration of these foundational works, references to the original papers and technical reports are provided throughout this section.
 
 ## Image Synthesis
 
-The task of *image synthesis* refers to a family of models designed to generate novel samples from a simple distribution that emulates a source dataset. Specifically, image synthesis models learn to map a dataset of images to a simple distribution (e.g., Gaussian), from which new images can be sampled.
+The task of *image synthesis* refers to a family of models designed to generate novel samples from a simple distribution that emulates a source dataset. Specifically, image synthesis models learn to map a dataset of images to a simple distribution (e.g., Gaussian), from which new images can be sampled. Several types of generative models have been developed in recent years, including—but not limited to- Variational Autoencoders (VAEs) [1], Generative Adversarial Networks (GANs) [2], Normalizing Flows (NFs) [3] and Diffusion Models (DMs) [4].
 
-Several types of generative models have been developed in recent years, including—but not limited to:
-
-- Variational Autoencoders (VAEs) [1]
-- Generative Adversarial Networks (GANs) [2]
-- Normalizing Flows (NFs) [3]
-- Diffusion Models (DMs) [4]
-
-Among these, **text-to-image models** such as DALL·E [5], Stable Diffusion [6], and FLUX [7] have achieved state-of-the-art performance and are widely used in applications that generate high-quality images from textual instructions—commonly referred to as *prompts*.
+Among these, **text-to-image models** such as DALL·E [5], Stable Diffusion [6], and FLUX [7] have achieved state-of-the-art performance and are widely used in applications that generate high-quality images from textual instructions, commonly referred to as *prompts*.
 
 ## Diffusion Models
 
@@ -31,48 +22,23 @@ During training, clean images are progressively corrupted with Gaussian noise ov
 
 Unlike earlier generative approaches such as GANs, which rely on adversarial training, diffusion models optimize a **likelihood-based objective**. They are therefore known for their training stability and high-quality outputs, especially in high-resolution image synthesis.
 
-Their iterative nature allows fine-grained control over the generation process, enabling powerful applications such as:
-
-- Super-resolution  
-- Inpainting  
-- Text-conditioned image generation
+Their iterative nature allows fine-grained control over the generation process, enabling powerful applications such as Super-resolution, Inpainting and Text-conditioned image generation.
 
 ## Stable Diffusion
 
-**Stable Diffusion** is a family of *latent diffusion models* (LDMs) [6] designed to generate high-quality images conditioned on textual prompts. Unlike traditional pixel-space diffusion models, LDMs operate in a **compressed latent space**, significantly improving computational efficiency while maintaining visual fidelity.
+**Stable Diffusion** is a family of *latent diffusion models* (LDMs) [6] designed to generate high-quality images conditioned on textual prompts. Unlike traditional pixel-space diffusion models, LDMs operate in a compressed latent space, significantly improving computational efficiency while maintaining visual fidelity. This is achieved by encoding input images into a lower-dimensional latent representation using a pre-trained autoencoder. The diffusion process is then applied in this latent space, and the final output is decoded back into pixel space.
 
-This is achieved by:
+The original **Stable Diffusion v1.4** and **v1.5** models introduced this efficient framework for open-domain image synthesis, using a frozen CLIP [9] text encoder for prompt conditioning and a U-Net architecture for latent denoising. These models, trained on subsets of LAION-2B [10], quickly gained popularity due to their open-source release, high versatility, and ease of fine-tuning.
 
-1. Encoding input images into a lower-dimensional latent representation using a pre-trained autoencoder.
-2. Applying the diffusion process in this latent space.
-3. Decoding the final output back into pixel space.
+**Stable Diffusion v2.1** introduced several architectural upgrades, including a switch to OpenCLIP [11] and training on higher resolutions (768×768), improving image structure and fidelity. **SDXL** [12] further improved realism and prompt alignment using a two-stage architecture (base + refiner). **SD-Turbo** [13] enabled near real-time image generation via an **Adversarial-Diffusion-Distillation (ADD)** process, where a *student model* mimics a *teacher* (e.g., SD2.1 or SDXL) with fewer steps. 
 
-The original Stable Diffusion v1.4 and v1.5 models used:
-
-- A **frozen CLIP** [9] text encoder for prompt conditioning.
-- A **U-Net** for latent denoising.
-- Datasets like **LAION-2B** [10] for training.
-
-**Stable Diffusion v2.1** introduced:
-
-- Use of **OpenCLIP** [11]
-- Training on **higher resolutions** (768×768)
-
-**SDXL** [12] further improved realism and prompt alignment using a two-stage architecture (base + refiner).
-
-**SD-Turbo** [13] enabled near real-time image generation via an **Adversarial-Diffusion-Distillation (ADD)** process, where a *student model* mimics a *teacher* (e.g., SD2.1 or SDXL) with fewer steps.
-
-**Stable Diffusion 3 (SD3)** [8] added:
-
-- A **diffusion transformer** backbone  
-- **Multimodal training** (joint text and image inputs)  
-- Enhanced prompt consistency and reasoning
+Most recently, Stable Diffusion 3 (SD3) [8] integrates a diffusion transformer backbone and adopts multimodal training, combining both text and image understanding for improved prompt adherence, compositional reasoning, and consistency. SD3 is designed for scalability and robustness, closing the gap between open models and proprietary systems like DALL·E 3 and Midjourney in terms of controllability and quality.
 
 ## Rectified Flows
 
 **Rectified Flow** [14] is a recent generative modeling framework that simplifies and generalizes diffusion models by replacing stochastic denoising with a **deterministic vector field**, based on *Flow Matching* [15].
 
-Whereas diffusion models learn to predict noise $\epsilon$ added during the forward process, Rectified Flow learns to predict a **velocity vector** $v$ that points from a noisy point $x_0$ to the data point $x_1$, along a straight path.
+While diffusion models (such as DDPMs [4]) learn to predict the noise ($\epsilon$) added during a forward diffusion process, Rectified Flow trains a model to predict a velocity vector $v$ that directly points from a noisy point $x_0$ (not to be confused with DM notation, where $x_0$ denotes the "clear" image) back to the data point $x_1$, along a straight interpolation path.
 
 In DMs, the loss is:
 
