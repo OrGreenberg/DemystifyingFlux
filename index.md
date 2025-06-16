@@ -4,19 +4,23 @@ title:
 permalink: /
 ---
 
-# Demystifying Flux.1
-**An unofficial documentation of FLUX.1 text-to-image architecture**
-
+# Demystifying Flux.1: An unofficial documentation of FLUX.1 text-to-image architecture
 > ⚠️ This is an **unofficial** and **reverse-engineered** documentation project. It is not affiliated with the original authors or organizations behind FLUX.1.
 
-[Or Greenberg](https://OrGreenberg.github.io)<sup>1,2</sup>  
+[Or Greenberg](https://OrGreenberg.github.io)<sup>1,2</sup>&nbsp;&nbsp;&nbsp;
+
+<div>
 <sup>1</sup> GM R&D &nbsp;|&nbsp; <sup>2</sup> Hebrew University of Jerusalem, Israel
+</div>
 
-[![arXiv](https://img.shields.io/badge/arXiv-Preprint%20TODO-darkred)](https://arxiv.org/abs/YOUR_PAPER_ID_HERE) <!-- TODO: Update with actual arXiv ID -->
- </bar>
- ![image](https://github.com/user-attachments/assets/7136918d-0356-4cca-a516-b88de55bf327)
+<br/>
 
----
+[![arXiv](https://img.shields.io/badge/arXiv-Preprint%20TODO-darkred)](https://arxiv.org/abs/YOUR_PAPER_ID_HERE) <!-- TODO: Update with actual arXiv ID --> 
+
+<br/>
+
+![image](https://github.com/user-attachments/assets/7136918d-0356-4cca-a516-b88de55bf327)
+</div>
 
 ## 📋 This blog has 3 parts:
 - [1. Background](/DemystifyingFlux/background/)
