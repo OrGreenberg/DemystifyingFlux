@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,15 +16,33 @@
       {% include google-analytics.html %}
     {% endif %}
 
-    <script type="text/javascript" async
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    <!-- MathJax -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        svg: { fontCache: 'global' }
+      };
     </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   </head>
 
   <body>
     <header class="site-header" role="banner">
       <div class="wrapper">
         <a class="site-title" rel="author" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+
+        {% if site.nav_links %}
+          <nav class="site-nav">
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; gap: 15px;">
+              {% for link in site.nav_links %}
+                <li><a href="{{ link.url | relative_url }}">{{ link.title }}</a></li>
+              {% endfor %}
+            </ul>
+          </nav>
+        {% endif %}
       </div>
     </header>
 
