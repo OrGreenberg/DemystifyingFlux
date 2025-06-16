@@ -38,13 +38,13 @@ Most recently, Stable Diffusion 3 (SD3) [8] integrates a diffusion transformer b
 
 **Rectified Flow** [14] is a recent generative modeling framework that simplifies and generalizes diffusion models by replacing stochastic denoising with a **deterministic vector field**, based on *Flow Matching* [15].
 
-While diffusion models (such as DDPMs [4]) learn to predict the noise ($$\epsilon$$) added during a forward diffusion process, Rectified Flow trains a model to predict a velocity vector $v$ that directly points from a noisy point $$x_0$$ (not to be confused with DM notation, where $$x_0$$ denotes the "clear" image) back to the data point \(x_1\), along a straight interpolation path.
+While diffusion models (such as DDPMs [4]) learn to predict the noise ($$\epsilon$$) added during a forward diffusion process, Rectified Flow trains a model to predict a velocity vector $v$ that directly points from a noisy point $$x_0$$ (not to be confused with DM notation, where $$x_0$$ denotes the "clear" image) back to the data point $$x_1$$, along a straight interpolation path.
 
 In DMs, the loss is:
 
-\[ 
+$$
 \mathcal{L}_\epsilon = \mathbb{E}_{x_t,\epsilon,t}\left[  \|\epsilon_\theta(x_t,t) - \epsilon\|^2  \right]
-\]
+$$
 
 with:
 
