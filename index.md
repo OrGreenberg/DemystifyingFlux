@@ -12,7 +12,7 @@ permalink: /
 <div>
 <sup>1</sup> GM R&D &nbsp;|&nbsp; <sup>2</sup> Hebrew University of Jerusalem, Israel
 </div>
-
+ƒ
 <br/>
 
 [![arXiv](https://img.shields.io/badge/arXiv-Preprint%20TODO-darkred)](https://arxiv.org/abs/YOUR_PAPER_ID_HERE) <!-- TODO: Update with actual arXiv ID --> 
@@ -20,7 +20,7 @@ permalink: /
 <br/>
 
 ![image](https://github.com/user-attachments/assets/7136918d-0356-4cca-a516-b88de55bf327)
-</div>
+
 
 ## 📋 This blog has 3 parts:
 - [1. Background](/DemystifyingFlux/background/)
