@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: "Model and Tools"
 permalink: /models_and_tools/
 ---
