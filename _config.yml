@@ -4,6 +4,9 @@ theme: minima
 baseurl: "/DemystifyingFlux"   # important for linking
 url: "https://orgreenberg.github.io"
 
+# Add this line:
+include: ["_includes/head-custom.html"]
+
 # Optional: configure navigation links to your sections
 nav_links:
   - title: Background
