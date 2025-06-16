@@ -49,7 +49,9 @@ Adaptive Layer Normalization (AdaLN) [^keddous2024vision] is a conditioning mech
 **Figure 3**  
 <a name="figure-3"></a>
 
+<br>
 ---
+<br>
 ## Pipeline Architecture  
 <a name="subsec-arch"></a>
 
@@ -88,8 +90,8 @@ Let \(\Phi = [\text{encoder\_hidden\_states}, \text{pooled\_projection}, \text{g
 Where \(v_\theta\) is the trainable network that estimates the velocity vector (see [Rectified Flow](#subsec-RF)) and \(\text{Samp}(\cdot)\) refers to the Flow-Matching Euler Discrete sampler \cite{lipman2022flow}. Note that the notation here differs from the one used in Diffusion Models. Here timesteps range between 0 and 1, with \(z_1\) the clear image and \(z_0\) the pure Gaussian noise.
 
 The final clean latent \(z_1\) is decoded via a pre-trained VAE model to get the final image \(x_1\). In the next section, we explore the architecture of \(v_\theta\).
-# Transformer
-## \label{subsec:transformer}
+## Transformer
+<a name="transformer"></a>
 
 The core component of FLUX.1’s synthesis pipeline is the velocity predictor $v_\theta$, which is optimized to estimate the velocity vector along the sampling trajectory (see Section~\ref{subsec:RF}). Similar to SD3 \cite{esser2024scaling}, FLUX.1 replaces the conventional *U-Net* architecture with a fully transformer-based design. A high-level overview of the transformer’s operations at each sampling step is provided in Figure 1. In this section, we describe the primary building blocks that constitute this transformer architecture.
 
