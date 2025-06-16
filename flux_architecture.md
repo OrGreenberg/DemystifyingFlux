@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: "FLUX.1 Architecture"
 permalink: /flux-architecture/
 ---
