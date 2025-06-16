@@ -4,8 +4,6 @@ title:
 permalink: /
 ---
 
-<p align="center">
-
 # Demystifying Flux.11
 **An unofficial documentation of FLUX.1 text-to-image architecture**
 
@@ -15,8 +13,6 @@ permalink: /
 <sup>1</sup> GM R&D &nbsp;|&nbsp; <sup>2</sup> Hebrew University of Jerusalem, Israel
 
 [![arXiv](https://img.shields.io/badge/arXiv-Preprint%20TODO-darkred)](https://arxiv.org/abs/YOUR_PAPER_ID_HERE) <!-- TODO: Update with actual arXiv ID -->
-
-</p>
 
 ---
 
