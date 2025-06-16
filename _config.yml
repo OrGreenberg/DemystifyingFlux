@@ -16,3 +16,4 @@ nav_links:
 # Enable plugins if needed (GitHub Pages supports a whitelist)
 plugins:
   - jekyll-feed
+  - jekyll-gfm-admonitions
