@@ -12,7 +12,7 @@ permalink: /
 [Or Greenberg](https://OrGreenberg.github.io)<sup>1,2</sup>&nbsp;&nbsp;&nbsp;
 
 <div>
-<sup>1</sup> GM R&D &nbsp;|&nbsp; <sup>2</sup> Hebrew University of Jerusalem, Israel
+<sup>1</sup> General Motors R&D &nbsp;|&nbsp; <sup>2</sup> Hebrew University of Jerusalem, Israel
 </div>
 
 <br/>
