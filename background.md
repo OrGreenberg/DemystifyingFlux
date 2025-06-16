@@ -42,10 +42,7 @@ While diffusion models (such as DDPMs [4]) learn to predict the noise ($$\epsilo
 
 In DMs, the loss is:
 
-$$
-\mathcal{L}_\epsilon = \mathbb{E}_{x_t,\epsilon,t}
-\left[  \|\epsilon_\theta(x_t,t) - \epsilon\|^2  \right]
-$$
+$$\mathcal{L}_\epsilon = \mathbb{E}_{x_t,\epsilon,t}\left[  \|\epsilon_\theta(x_t,t) - \epsilon\|^2  \right]$$
 
 with:
 
