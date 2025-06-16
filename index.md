@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Demystifying FLUX.1
+title: 
 permalink: /
 ---
 
