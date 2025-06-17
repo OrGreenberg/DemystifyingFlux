@@ -3,10 +3,6 @@ layout: default
 title: "Model and Tools"
 permalink: /models-and-tools/
 ---
-
-# Model and Tools
-
-# Models and Tools
 <a name="sec:hub"></a>
 
 ## text-to-image
