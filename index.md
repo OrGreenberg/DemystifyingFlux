@@ -34,7 +34,6 @@ permalink: /
 ---
 </div>
 
-<br>
 ## 📋 This blog has 3 parts:
 - [1. Background](/DemystifyingFlux/background/)
 - [2. FLUX.1 Architecture](/DemystifyingFlux/flux-architecture/)
@@ -43,9 +42,9 @@ permalink: /
 ---
 <br>
 ## 💬 Contribute to the blog!
-You may report issues or point at new FLUX releases in the blog's [GitHub issues](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
+- Please report issues or point at new FLUX releases in the blog's [GitHub issues](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
 
-Do you want to discuss FLUX? You can do that in the blog's [GitHub discussion](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
+- Do you want to discuss FLUX? Ask question? You can do that in the blog's [discussion](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
 
 <br>
 ---
