@@ -113,7 +113,7 @@ Along the sampling trajectory, the transformer is initiated multiple times, once
 - The guiding parameter **timestep** is iterated from the pre-calculated list of values between **1** to **0**.
 - **hidden_state** (mostly referred to as $$z_t$$) is the latent representation which is iteratively refined from Gaussian noise into a clear image. It is updated along the sampling trajectory.
 
-![Flux Transformer: per-step inputs preprocess](assets/t_preprocess.jpg){#fig:t_preprocess}
+![Flux Transformer: per-step inputs preprocess](assets/t_preprocess.jpg)
 **Figure 6** Flux Transformer: per-step inputs preprocess
 <a name="figure-6"></a>
 <br>
@@ -126,32 +126,28 @@ As a result, the transformer pre-processes its inputs internally as described in
 The **pos_embeds** and **temb** parameters are used to support the attention mechanism along the step, while **hidden_states** and **encoder_hidden_states** are processed and refined along the step.
 
 ---
-
+<br>
 ### Double Transformer Block
 <a name="double-bloock"></a>
 
-After preprocessing, a series of 19 Double-Transformer blocks are applied. These blocks employ separate weights for image and text tokens. Multi-modality is achieved by applying the attention operation over the concatenation of the tokens (see Figure 3b).
-
-<div style="text-align:center;">
+After preprocess, a series of 19 Double-Transformer blocks are applied. Those blocks employ seperate weights for image and text tokens (see Figure [7a]("figure-7a")). Multi-modality is achieved by applying the attention operation over the concatenation of the tokens (see Figure [7b]("figure-7b")).
   
-![Double-Attention Block: latent and prompt embeddings are processed separately, in a standard attention scheme.](figures/double_stream.jpg){#subfig:double}
-
-*Figure 3a: Double-Attention Block: latent and prompt embeddings are processed separately, in a standard attention scheme.*
-
+![Double-Attention Block: latent and prompt embeddings are processed separately, in a standard attention scheme.](assets/double_stream.jpg){#subfig:double}
+**Figure 7a.** Double-Attention Block: latent and prompt embeddings are processed separately, in a standard attention scheme.
+<a name="figure-7a"></a>
 <br>
 
-![The attention operation is applied over the concatenation of the tokens.](figures/double_attention.jpg){#subfig:double_Attn}
+![The attention operation is applied over the concatenation of the tokens.](assets/double_attention.jpg)
+**Figure 7b.** The attention operation is applied over the concatenation of the tokens.
+<a name="figure-7b"></a>
+<br>
 
-*Figure 3b: The attention operation is applied over the concatenation of the tokens.*
-
-</div>
-
-Each stream (latent and prompt) uses AdaLN layers for normalization and modulation (see Figure 3a). The normalized tensors are used to extract the $$K$$, $$Q$$, and $$V$$ matrices for each domain, which are then concatenated for mixed attention. The concatenated $$K$$ and $$Q$$ matrices are rotated using precomputed rotary positional embeddings and passed through the mixed attention operation. The outputs are separated back into their respective streams and alpha-blended with the residual input using the $$gate_{\text{msa}}$$ parameter extracted by the AdaLN layer. The results are further normalized via a LayerNorm ($$LN$$) layer and modulated using the $$scale_{\text{mlp}}$$ and $$shift_{\text{mlp}}$$ parameters, also extracted by the AdaLN layer, before being passed to the feedforward layer. Finally, the output is alpha-blended with the unnormalized input using the $$gate_{\text{mlp}}$$ parameter from the AdaLN layer. The entire process is illustrated in Figure 3a.
+Each stream (latent and prompt) uses AdaLN layers for normalization and modulation (see Figure [3]("figure-3")). The normalized tensors are used to extract the $$K$$, $$Q$$, and $$V$$ matrices for each domain, which are then concatenated for mixed attention. The concatenated $$K$$ and $$Q$$ matrices are rotated using precomputed rotary positional embeddings and passed through the mixed attention operation. The outputs are separated back into their respective streams and alpha-blended with the residual input using the $$gate_{\text{msa}}$$ parameter extracted by the AdaLN layer. The results are further normalized via a LayerNorm ($$LN$$) layer and modulated using the $$scale_{\text{mlp}}$$ and $$shift_{\text{mlp}}$$ parameters, also extracted by the AdaLN layer, before being passed to the feedforward layer. Finally, the output is alpha-blended with the unnormalized input using the $$gate_{\text{mlp}}$$ parameter from the AdaLN layer. The entire process is illustrated in Figure 3a.
 
 ---
-
+<br>
 ### Single Transformer Block  
-\label{ssec:Single}
+<a name="single-block"></a>
 
 After the series of Double-Stream blocks is applied, the processed latent and prompt embeddings are concatenated and fed through a series of Single-Stream blocks.
 
@@ -159,13 +155,13 @@ While the Double-Stream blocks apply different weights for prompt and latent emb
 
 <div style="text-align:center;">
   
-![Single-Attention Block: latent and prompt embeddings are processed together, in a simultaneous attention scheme.](figures/single_stream.jpg){#subfig:single}
+![Single-Attention Block: latent and prompt embeddings are processed together, in a simultaneous attention scheme.](assets/single_stream.jpg){#subfig:single}
 
 *Figure 4a: Single-Attention Block: latent and prompt embeddings are processed together, in a simultaneous attention scheme.*
 
 <br>
 
-![The $$K$$, $$Q$$ and $$V$$ matrices are computed directly from the concatenated representation.](figures/single_attention.jpg){#subfig:single_Attn}
+![The matrices are computed directly from the concatenated representation.](assets/single_attention.jpg){#subfig:single_Attn}
 
 *Figure 4b: The $$K$$, $$Q$$ and $$V$$ matrices are computed directly from the concatenated representation.*
 
