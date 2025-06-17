@@ -114,18 +114,21 @@ Along the sampling trajectory, the transformer is initiated multiple times, once
 - **hidden_state** (mostly referred to as $$z_t$$) is the latent representation which is iteratively refined from Gaussian noise into a clear image. It is updated along the sampling trajectory.
 
 ![Flux Transformer: per-step inputs preprocess](assets/t_preprocess.jpg){#fig:t_preprocess}
+**Figure 6** Flux Transformer: per-step inputs preprocess
+<a name="figure-6"></a>
+<br>
+As a result, the transformer pre-processes its inputs internally as described in Figure [6]("figure-6"). Formally, the following steps are taken:
 
-As a result, the transformer pre-processes its inputs internally as described in Figure 2. Formally, the following steps are taken:
-
-- Use of per-domain linear layers to bring the latent embeddings and dense-prompt-embeddings (T5) into a shared dimensionality of 3072 features per token.
-- Construction of guiding embeds. Unlike Diffusion Models, that encode only the "temporal" information (i.e, timestep) in this phase, FLUX.1 uses both the timestep and the pooled prompt embeds (from CLIP) as guiding embeddings, yet keeps the traditional notation **temb**. It uses sinusoidal projection (as in ^[ho2020denoising]) to embed the integer values of the timestep and guidance, then applies dedicated linear projection layers to each component to bring them to the shared dimensionality of 3072 features. Finally, the 3 projected embeddings are summed to create the final **temb** (marked in a red block in Figure 2).
-- The **img_ids** and **text_ids** (see Section \ref{subsec:arch}) are concatenated, then used to extract per-token positional embeddings. To extract positional embeddings from 3D token indices $$(t,h,w)$$, each axis is first converted to a continuous embedding using axis-specific sinusoidal frequencies scaled by a constant $$\theta$$. The cosine and sine of the resulting frequency-position products are computed and interleaved to form real-valued vectors. These are then concatenated across all axes to produce the final positional embedding as a pair of tensors (cosine and sine), ready to be used in rotary positional encoding (the process is composed in the purple block in Figure 2). Note that this process is not influenced by **timestep** nor **hidden_states**, hence the **pos_embeds** are constant across different sampling steps.
+- use of per-domain linear layers to bring the latent embeddings and dense-prompt-embeddings (T5) into a shared dimensionality of 3072 features per token. 
+- construction of guiding embeds. Unlike Diffusion Models, that encode only the "temporal" information (i.e, timestep) in this phase, FLUX.1 uses both the timestep and the pooled prompt embeds (from CLIP) as guiding embeddings, yet keeps the traditional notation **temb**. It uses sinusoidal projection (as in ^[ho2020denoising]) to embed the integer values of the timestep and guidance, than applies dedicated linear projection layers to each component to bring them to the shared dimensionality of 3072 features. Finally, the 3 projected embeddings are summed to create the final **temb** (marked in a red block in Figure [6]("figure-6")).
+- The **img_ids** and **text_ids** (see Section [Pipeline Architecture](#pipeline-architecture)) are concatenated, than used to extract per-token positional embeds. To extract positional embeddings from 3D token indices (t,h,w), each axis is first converted to a continuous embedding using axis-specific sinusoidal frequencies scaled by a constant $$\theta$$. TThe cosine and sine of the resulting frequency-position products are computed and interleaved to form real-valued vectors. These are then concatenated across all axes to produce the final positional embedding as a pair of tensors (cosine and sine), ready to be used in rotary positional encoding (the process os composed in the purple block in Figure [6]("figure-6")). Note that this process is not influenced by **timestep** nor **hidden_states**, hence the **pos_embeds** are constant across different sampling steps.
 
 The **pos_embeds** and **temb** parameters are used to support the attention mechanism along the step, while **hidden_states** and **encoder_hidden_states** are processed and refined along the step.
 
 ---
 
 ### Double Transformer Block
+<a name="double-bloock"></a>
 
 After preprocessing, a series of 19 Double-Transformer blocks are applied. These blocks employ separate weights for image and text tokens. Multi-modality is achieved by applying the attention operation over the concatenation of the tokens (see Figure 3b).
 
