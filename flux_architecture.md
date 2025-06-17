@@ -198,7 +198,6 @@ In summary, Single-Stream blocks emphasize efficiency and simplicity through par
 ---
 <br>
 ## References
-<br>
 [^flux2024]: FLUX.1 paper, Black Forest Labs (2024).  
 [^radford2021learning]: Radford et al., “Learning Transferable Visual Models From Natural Language Supervision”, OpenAI (2021).  
 [^raffel2020exploring]: Raffel et al., “Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer”, JMLR (2020).  
@@ -206,5 +205,5 @@ In summary, Single-Stream blocks emphasize efficiency and simplicity through par
 [^keddous2024vision]: Keddous et al., “Vision Pro Transformers via Adaptive Normalization”, (2024).  
 [^nichol2021glide]: Nichol et al., “GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models”, OpenAI (2021).  
 [^sauer2023stylegan]: Sauer et al., “StyleGAN-T: Unlocking the Power of GANs for Fast, High-Resolution Text-to-Image Synthesis”, (2023).
-[^FLUXAnnounce]: [Black-Forest-Labs official FLUX.1 announcement](https://bfl.ai/announcements/24-08-01-bfl), 
+[^FLUXAnnounce]: [Black-Forest-Labs official FLUX.1 announcement](https://bfl.ai/announcements/24-08-01-bfl), (2024). 
 [^rombach2022high]:Rombach, Robin, et al. "High-resolution image synthesis with latent diffusion models." (2022).‏
