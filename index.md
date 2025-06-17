@@ -10,7 +10,8 @@ permalink: /
 # An unofficial documentation of FLUX.1 text-to-image architecture
 > ⚠️ This is an **unofficial** and **reverse-engineered** documentation project. It is not affiliated with the original authors or organizations behind FLUX.1.
 
-[Or Greenberg](https://OrGreenberg.github.io)<sup>1,2</sup>&nbsp;&nbsp;&nbsp;
+[Or Greenberg]<sup>1,2</sup>&nbsp;&nbsp;&nbsp; [![LinkedIn](https://www.linkedin.com/in/or-greenberg/)[![Google Scholar](https://scholar.google.com/citations?user=p6tIB6UAAAAJ&hl=iw)
+
 
 <div>
 <sup>1</sup> General Motors R&D &nbsp;|&nbsp; <sup>2</sup> Hebrew University of Jerusalem, Israel
