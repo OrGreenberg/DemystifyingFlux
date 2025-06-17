@@ -39,3 +39,10 @@ Originally developed for text-to-image generation, FLUX.1 has since been extende
 
 - **FLUX-Kontext**  
   Extends the text-to-image capabilities of the base FLUX model into powerful in-context generation and editing workflows by enabling multimodal conditioning—allowing users to guide generation using both text and reference images. While *FLUX-Redux* had already introduced basic multimodal conditioning for image variation and prompt-driven restyling, *FLUX-Kontext* unlocks advanced functionality such as localized edits, style transfer, and character or scene consistency across images. With models like Kontext [pro] and [max], the focus shifts toward fast, iterative generation and high-precision editing. As of June 5th, 2025, the *FLUX-Kontext* models are not yet publicly released, and therefore could not be directly explored or evaluated in this report.
+
+  <br>
+---
+<br>
+## References
+[^sauer2023stylegan]: Sauer et al., “StyleGAN-T: Unlocking the Power of GANs for Fast, High-Resolution Text-to-Image Synthesis”, (2023).
+[^FLUXAnnounce]: [Black-Forest-Labs official FLUX.1 announcement](https://bfl.ai/announcements/24-08-01-bfl), (2024).
