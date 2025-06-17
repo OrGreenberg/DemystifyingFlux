@@ -46,7 +46,6 @@ permalink: /
 
 - Do you want to discuss FLUX? Ask question? You can do that in the blog's [discussion](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
 
-<br>
 ---
 <br>
 ## 📝 Citation
