@@ -99,9 +99,12 @@ The final clean latent $$z_1$$ is decoded via a pre-trained VAE model to get the
 ## Transformer
 <a name="transformer"></a>
 
-The core component of FLUX.1’s synthesis pipeline is the velocity predictor $$v_\theta$$, which is optimized to estimate the velocity vector along the sampling trajectory (see Section~\ref{subsec:RF}). Similar to SD3 ^[esser2024scaling], FLUX.1 replaces the conventional *U-Net* architecture with a fully transformer-based design. A high-level overview of the transformer’s operations at each sampling step is provided in Figure 1. In this section, we describe the primary building blocks that constitute this transformer architecture.
+The core component of FLUX.1’s synthesis pipeline is the velocity predictor $$v_\theta$$, which is optimized to estimate the velocity vector along the sampling trajectory (see Section [Rectified Flows](#rectified-flows)). Similar to SD3 ^[esser2024scaling], FLUX.1 replaces the conventional *U-Net* architecture with a ffully transformer-based design. A high-level overview of the transformer’s operations at each sampling step is provided in Figure [5]("figure-5"). In this section, we describe the primary building blocks that constitute this transformer architecture.
 
-![Flux Transformer: high-level overview](assets/transformer.jpg){#fig:transformer}
+![Flux Transformer: high-level overview](assets/transformer.jpg)
+**Figure 5** Flux Transformer: high-level overview
+<a name="figure-5"></a>
+<br>
 
 ### Step Pre-Process
 
