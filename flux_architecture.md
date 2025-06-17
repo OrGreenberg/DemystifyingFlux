@@ -22,7 +22,7 @@ The FLUX.1 models (see [Section: Hub](#sec-hub)) demonstrate State-of-the-art (S
 <a name="figure-2"></a>
 <br>
 
-While the model likely adheres to the Rectified Flow training paradigm, the exact details regarding the training setup - including the dataset, scheduling strategy, and hyperparameters — have not been publicly disclosed. However, the model’s architecture and inference scheme can be reverse-engineered from the publicly available inference code. In this section, we outline the model’s architecture to demystify its behavior at inference time. We begin by introducing key pre-trained components and foundational concepts in [Preliminaries](#preliminaries), followed by a detailed breakdown of the model’s individual blocks and the end-to-end inference pipeline in [Architecture](#architecture), which together constitute its text-to-image generation mechanism.
+While the model likely adheres to the Rectified Flow training paradigm, the exact details regarding the training setup - including the dataset, scheduling strategy, and hyperparameters — have not been publicly disclosed. However, the model’s architecture and inference scheme can be reverse-engineered from the publicly available inference code. In this section, we outline the model’s architecture to demystify its behavior at inference time. We begin by introducing key pre-trained components and foundational concepts in [Preliminaries](#preliminaries), followed by a detailed breakdown of the model’s individual blocks in [Transformer](#transformer) and the end-to-end inference pipeline in [Architecture](#pipeline-architecture ), which together constitute its text-to-image generation mechanism.
 
 ---
 
@@ -45,7 +45,7 @@ Rotary Positional Embeddings (RoPE) [^su2024roformer] are a method for injecting
 
 ### Adaptive Layer Normalization
 
-Adaptive Layer Normalization (AdaLN) [^keddous2024vision] is a conditioning mechanism used in Transformer-based models [^nichol2021glide, ^sauer2023stylegan] to modulate intermediate activations based on external input, such as text or image embeddings. Unlike standard Layer Normalization, which applies fixed scaling and shifting parameters, AdaLN dynamically generates these parameters as functions of a conditioning vector (see Figure [](#figure-3)). This allows the model to adapt its behavior at each layer according to the input prompt or guidance signal.
+Adaptive Layer Normalization (AdaLN) [^keddous2024vision] is a conditioning mechanism used in Transformer-based models [^nichol2021glide, ^sauer2023stylegan] to modulate intermediate activations based on external input, such as text or image embeddings. Unlike standard Layer Normalization, which applies fixed scaling and shifting parameters, AdaLN dynamically generates these parameters as functions of a conditioning vector (see Figure [3](#figure-3)). This allows the model to adapt its behavior at each layer according to the input prompt or guidance signal.
 
 ![AdaLN layer, where MSA (Multi-head Self Attention) and MLP (Multi-Layer Processor) modulation parameters are computed based on the input tensor. In Single-Stream block, MLP modulation is not computed.](assets/ADALN.jpg)  
 **Figure 3** AdaLN layer, where MSA (Multi-head Self Attention) and MLP (Multi-Layer Processor) modulation parameters are computed based on the input tensor. In Single-Stream block (see \Cref{ssec:Single}), MLP modulation is not computed. 
@@ -55,9 +55,9 @@ Adaptive Layer Normalization (AdaLN) [^keddous2024vision] is a conditioning mech
 ---
 <br>
 ## Pipeline Architecture  
-<a name="subsec-arch"></a>
+<a name="pipeline-architecture"></a>
 
-In this section and in [Transformer Architecture](#subsec-transformer), we describe the architecture and sampling pipeline of FLUX.1. For simplicity, we refer to the text-to-image sampling process as being conditioned on a single prompt per sample.
+In this section and in [Transformer Architecture](#transformer), we describe the architecture and sampling pipeline of FLUX.1. For simplicity, we refer to the text-to-image sampling process as being conditioned on a single prompt per sample.
 
 Similar to LDM [^rombach2022high], FLUX operates in a latent space, where the final latent output is decoded to reconstruct the RGB image in pixel space. Following LDM’s approach, the authors trained a convolutional autoencoder from scratch using an adversarial objective, but scaled up the latent representation from 4 channels (in LDM) to 16 channels. A high-level overview of FLUX's sampling pipeline is presented in figure [4]("figure-4").
 
@@ -91,7 +91,7 @@ $$
 \forall t \in \text{timesteps}: \quad z_{t+\Delta t} = \text{Samp}\bigl(v_\theta(z_t, t, \Phi)\bigr)
 $$
 
-Where $$v_\theta$$ is the trainable network that estimates the velocity vector (see [Rectified Flow](#subsec-RF)) and $$\text{Samp}(\cdot)$$ refers to the Flow-Matching Euler Discrete sampler ^[lipman2022flow]. Note that the notation here differs from the one used in Diffusion Models. Here timesteps range between 0 and 1, with $$z_1$$ the clear image and $$z_0$$ the pure Gaussian noise.
+Where $$v_\theta$$ is the trainable network that estimates the velocity vector (see [Rectified Flow](#rectified-flows)) and $$\text{Samp}(\cdot)$$ refers to the Flow-Matching Euler Discrete sampler ^[lipman2022flow]. Note that the notation here differs from the one used in Diffusion Models. Here timesteps range between 0 and 1, with $$z_1$$ the clear image and $$z_0$$ the pure Gaussian noise.
 
 The final clean latent $$z_1$$ is decoded via a pre-trained VAE model to get the final image $$x_1$$. In the next section, we explore the architecture of $$v_\theta$$.
 <br>
