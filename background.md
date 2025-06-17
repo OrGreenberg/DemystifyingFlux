@@ -9,6 +9,7 @@ To better understand the foundations of **FLUX**, we briefly present several key
 ---
 <br>
 ## Image Synthesis
+<a name="image-synthesis"></a>
 
 The task of *image synthesis* refers to a family of models designed to generate novel samples from a simple distribution that emulates a source dataset. Specifically, image synthesis models learn to map a dataset of images to a simple distribution (e.g., Gaussian), from which new images can be sampled. Several types of generative models have been developed in recent years, including—but not limited to- Variational Autoencoders (VAEs) [1], Generative Adversarial Networks (GANs) [2], Normalizing Flows (NFs) [3] and Diffusion Models (DMs) [4].
 
@@ -17,6 +18,7 @@ Among these, **text-to-image models** such as DALL·E [5], Stable Diffusion [6],
 ---
 <br>
 ## Diffusion Models
+<a name="diffusion-models"></a>
 
 **Diffusion Models (DMs)** [4] are a class of text-to-image generative models that have recently emerged as state-of-the-art (SoTA) in image synthesis. They work by learning to reverse a gradual noising process applied to training data.
 
@@ -31,6 +33,8 @@ Their iterative nature allows fine-grained control over the generation process, 
 ---
 <br>
 ## Stable Diffusion
+<a name="stable-diffusion"></a>
+
 
 **Stable Diffusion** is a family of *latent diffusion models* (LDMs) [6] designed to generate high-quality images conditioned on textual prompts. Unlike traditional pixel-space diffusion models, LDMs operate in a compressed latent space, significantly improving computational efficiency while maintaining visual fidelity. This is achieved by encoding input images into a lower-dimensional latent representation using a pre-trained autoencoder. The diffusion process is then applied in this latent space, and the final output is decoded back into pixel space.
 
@@ -43,6 +47,8 @@ Most recently, Stable Diffusion 3 (SD3) [8] integrates a diffusion transformer b
 ---
 <br>
 ## Rectified Flows
+<a name="rectified-flows"></a>
+
 
 **Rectified Flow** [14] is a recent generative modeling framework that simplifies and generalizes diffusion models by replacing stochastic denoising with a **deterministic vector field**, based on *Flow Matching* [15].
 
@@ -79,6 +85,7 @@ While Rectified Flow is a training technique rather than an architectural innova
 ---
 <br>
 ## Transformers
+<a name="transformers"></a>
 
 **Transformers** are a class of neural network architectures originally developed for NLP tasks [16]. Their core innovation is the **self-attention mechanism**, which lets the model learn relationships between all elements in a sequence.
 
