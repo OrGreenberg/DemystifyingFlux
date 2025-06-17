@@ -11,18 +11,18 @@ To better understand the foundations of **FLUX**, we briefly present several key
 ## Image Synthesis
 <a name="image-synthesis"></a>
 
-The task of *image synthesis* refers to a family of models designed to generate novel samples from a simple distribution that emulates a source dataset. Specifically, image synthesis models learn to map a dataset of images to a simple distribution (e.g., Gaussian), from which new images can be sampled. Several types of generative models have been developed in recent years, including—but not limited to- Variational Autoencoders (VAEs) [1], Generative Adversarial Networks (GANs) [2], Normalizing Flows (NFs) [3] and Diffusion Models (DMs) [4].
+The task of *image synthesis* refers to a family of models designed to generate novel samples from a simple distribution that emulates a source dataset. Specifically, image synthesis models learn to map a dataset of images to a simple distribution (e.g., Gaussian), from which new images can be sampled. Several types of generative models have been developed in recent years, including—but not limited to- Variational Autoencoders (VAEs) [^kingma2013auto], Generative Adversarial Networks (GANs) [^goodfellow2020generative], Normalizing Flows (NFs) [^papamakarios2021normalizing] and Diffusion Models (DMs) [^ho2020denoising].
 
-Among these, **text-to-image models** such as DALL·E [5], Stable Diffusion [6], and FLUX [7] have achieved state-of-the-art performance and are widely used in applications that generate high-quality images from textual instructions, commonly referred to as *prompts*.
+Among these, **text-to-image models** such as DALL·E [^ramesh2021zero], Stable Diffusion [^rombach2022high], and FLUX [^flux2024] have achieved state-of-the-art performance and are widely used in applications that generate high-quality images from textual instructions, commonly referred to as *prompts*.
 
 ---
 <br>
 ## Diffusion Models
 <a name="diffusion-models"></a>
 
-**Diffusion Models (DMs)** [4] are a class of text-to-image generative models that have recently emerged as state-of-the-art (SoTA) in image synthesis. They work by learning to reverse a gradual noising process applied to training data.
+**Diffusion Models (DMs)** [^ho2020denoising] are a class of text-to-image generative models that have recently emerged as state-of-the-art (SoTA) in image synthesis. They work by learning to reverse a gradual noising process applied to training data.
 
-While early diffusion models relied on U-Net architectures composed of convolutional layers augmented with attention mechanisms for image–text alignment, recent models such as SD3 [8] and FLUX.1 [7] have transitioned to **fully Transformer-based architectures**, offering improved scalability and context modeling.
+While early diffusion models relied on U-Net architectures composed of convolutional layers augmented with attention mechanisms for image–text alignment, recent models such as SD3 [^esser2024scaling] and FLUX.1 [^flux2024] have transitioned to **fully Transformer-based architectures**, offering improved scalability and context modeling.
 
 During training, clean images are progressively corrupted with Gaussian noise over a series of time steps, and the model is trained to denoise the corrupted images step-by-step. At inference time, the model starts from pure noise and iteratively denoises it to generate realistic samples.
 
@@ -35,14 +35,13 @@ Their iterative nature allows fine-grained control over the generation process, 
 ## Stable Diffusion
 <a name="stable-diffusion"></a>
 
+**Stable Diffusion** is a family of *latent diffusion models* (LDMs) [^rombach2022high] designed to generate high-quality images conditioned on textual prompts. Unlike traditional pixel-space diffusion models, LDMs operate in a compressed latent space, significantly improving computational efficiency while maintaining visual fidelity. This is achieved by encoding input images into a lower-dimensional latent representation using a pre-trained autoencoder. The diffusion process is then applied in this latent space, and the final output is decoded back into pixel space.
 
-**Stable Diffusion** is a family of *latent diffusion models* (LDMs) [6] designed to generate high-quality images conditioned on textual prompts. Unlike traditional pixel-space diffusion models, LDMs operate in a compressed latent space, significantly improving computational efficiency while maintaining visual fidelity. This is achieved by encoding input images into a lower-dimensional latent representation using a pre-trained autoencoder. The diffusion process is then applied in this latent space, and the final output is decoded back into pixel space.
+The original **Stable Diffusion v1.4** and **v1.5** models introduced this efficient framework for open-domain image synthesis, using a frozen CLIP [^radford2021learning] text encoder for prompt conditioning and a U-Net architecture for latent denoising. These models, trained on subsets of LAION-2B [^schuhmann2022laionb], quickly gained popularity due to their open-source release, high versatility, and ease of fine-tuning.
 
-The original **Stable Diffusion v1.4** and **v1.5** models introduced this efficient framework for open-domain image synthesis, using a frozen CLIP [9] text encoder for prompt conditioning and a U-Net architecture for latent denoising. These models, trained on subsets of LAION-2B [10], quickly gained popularity due to their open-source release, high versatility, and ease of fine-tuning.
+**Stable Diffusion v2.1** introduced several architectural upgrades, including a switch to OpenCLIP [^ilharco_gabriel_2021_5143773] language model and training on higher resolutions (768×768), improving image structure and fidelity. **SDXL** [^podell2023sdxl] further improved realism and prompt alignment using a two-stage architecture (base + refiner). **SD-Turbo** [^sauer2024adversarial] enabled near real-time image generation via an **Adversarial-Diffusion-Distillation (ADD)** process, where a *student model* mimics a *teacher* (e.g., SD2.1 or SDXL) with fewer steps. 
 
-**Stable Diffusion v2.1** introduced several architectural upgrades, including a switch to OpenCLIP [11] and training on higher resolutions (768×768), improving image structure and fidelity. **SDXL** [12] further improved realism and prompt alignment using a two-stage architecture (base + refiner). **SD-Turbo** [13] enabled near real-time image generation via an **Adversarial-Diffusion-Distillation (ADD)** process, where a *student model* mimics a *teacher* (e.g., SD2.1 or SDXL) with fewer steps. 
-
-Most recently, Stable Diffusion 3 (SD3) [8] integrates a diffusion transformer backbone and adopts multimodal training, combining both text and image understanding for improved prompt adherence, compositional reasoning, and consistency. SD3 is designed for scalability and robustness, closing the gap between open models and proprietary systems like DALL·E 3 and Midjourney in terms of controllability and quality.
+Most recently, Stable Diffusion 3 (SD3) [^esser2024scaling] integrates a diffusion transformer backbone and adopts multimodal training, combining both text and image understanding for improved prompt adherence, compositional reasoning, and consistency. SD3 is designed for scalability and robustness, closing the gap between open models and proprietary systems like DALL·E 3 and Midjourney in terms of controllability and quality.
 
 ---
 <br>
@@ -50,9 +49,9 @@ Most recently, Stable Diffusion 3 (SD3) [8] integrates a diffusion transformer b
 <a name="rectified-flows"></a>
 
 
-**Rectified Flow** [14] is a recent generative modeling framework that simplifies and generalizes diffusion models by replacing stochastic denoising with a **deterministic vector field**, based on *Flow Matching* [15].
+**Rectified Flow** [^liu2022flow] is a recent generative modeling framework that simplifies and generalizes diffusion models by replacing stochastic denoising with a **deterministic vector field**, based on *Flow Matching* [^lipman2022flow].
 
-While diffusion models (such as DDPMs [4]) learn to predict the noise ($$\epsilon$$) added during a forward diffusion process, Rectified Flow trains a model to predict a velocity vector $v$ that directly points from a noisy point $$x_0$$ (not to be confused with DM notation, where $$x_0$$ denotes the "clear" image) back to the data point $$x_1$$, along a straight interpolation path.
+While diffusion models (such as DDPMs [^ho2020denoising]) learn to predict the noise ($$\epsilon$$) added during a forward diffusion process, Rectified Flow trains a model to predict a velocity vector $v$ that directly points from a noisy point $$x_0$$ (not to be confused with DM notation, where $$x_0$$ denotes the "clear" image) back to the data point $$x_1$$, along a straight interpolation path.
 
 In diffusion models, the network is trained using the epsilon objective, which minimizes the difference between the predicted noise $$\epsilon_\theta(x_t,t)$$ and true noise $$\epsilon$$ added to a sample:
 
@@ -87,7 +86,7 @@ While Rectified Flow is a training technique rather than an architectural innova
 ## Transformers
 <a name="transformers"></a>
 
-**Transformers** are a class of neural network architectures originally developed for NLP tasks [16]. Their core innovation is the **self-attention mechanism**, which lets the model learn relationships between all elements in a sequence.
+**Transformers** are a class of neural network architectures originally developed for NLP tasks [^vaswani2017attention]. Their core innovation is the **self-attention mechanism**, which lets the model learn relationships between all elements in a sequence.
 
 In each attention block, queries (Q), keys (K), and values (V) are computed via learned projections:
 
@@ -97,6 +96,28 @@ $$
 
 Where $$d_k$$ is the dimensionality of keys and the Softmax operation ensures the attention scores sum to 1. This mechanism allows the model to assign different levels of importance to different tokens when computing a new representation for each token in the sequence. In practice, multi-head attention is used, where multiple sets of $$Q$$/$$K$$/$$V$$ projections are computed in parallel to capture diverse types of relationships.
 
-For vision tasks, Vision Transformers (ViTs) [17] tokenize an image into fixed-size non-overlapping patches (e.g., $16\times16$ pixels), flatten each patch, and project them into an embedding space. These patch embeddings are then processed by a standard transformer encoder, often with added positional encodings to preserve spatial structure. This enables ViTs to model long-range dependencies across an image without convolutional inductive biases.
+For vision tasks, Vision Transformers (ViTs) [^dosovitskiy2020image] tokenize an image into fixed-size non-overlapping patches (e.g., $16\times16$ pixels), flatten each patch, and project them into an embedding space. These patch embeddings are then processed by a standard transformer encoder, often with added positional encodings to preserve spatial structure. This enables ViTs to model long-range dependencies across an image without convolutional inductive biases.
 
 In text-to-image generation, transformers often use **cross-attention** to condition image synthesis on textual prompts. In this setup, the image tokens (or latent features in the case of latent diffusion) act as queries, while the text embeddings serve as keys and values. This allows the model to modulate image generation based on semantic information from the prompt.
+
+<br>
+---
+<br>
+## References
+[^kingma2013auto]: Zeng, Yu, Huchuan Lu, and Ali Borji. "Statistics of deep generated images." (2017).‏
+[^goodfellow2020generative]: Goodfellow, Ian, et al. "Generative adversarial networks." (2020).‏
+[^papamakarios2021normalizing]: Papamakarios, George, et al. "Normalizing flows for probabilistic modeling and inference." (2021).‏
+[^ramesh2021zero]: Ramesh, Aditya, et al. "Zero-shot text-to-image generation." (2021).‏ 
+[^rombach2022high]: Rombach, Robin, et al. "High-resolution image synthesis with latent diffusion models." (2022).‏
+[^flux2024]: Black Forest Labs. \url{https://github.com/black-forest-labs/flux}. (2024)
+[^esser2024scaling]: Esser, Patrick, et al. "Scaling rectified flow transformers for high-resolution image synthesis." (2024).‏
+[^radford2021learning]: Radford, Alec, et al. "Learning transferable visual models from natural language supervision." (2021).‏
+[^schuhmann2022laionb]: Schuhmann, Christoph, et al. "Laion-5b: An open large-scale dataset for training next generation image-text models." (2022).‏
+[^podell2023sdxl]: Podell, Dustin, et al. "Sdxl: Improving latent diffusion models for high-resolution image synthesis." (2023).‏
+[^sauer2024adversarial]: Sauer, Axel, et al. "Adversarial diffusion distillation." (2024).‏
+[^liu2022flow]: Liu, Xingchao, Chengyue Gong, and Qiang Liu. "Flow straight and fast: Learning to generate and transfer data with rectified flow." (2022).‏
+[^lipman2022flow]: Lipman, Yaron, et al. "Flow matching for generative modeling." (2022).‏
+[^vaswani2017attention]: Vaswani, Ashish, et al. "Attention is all you need." (2017).‏
+[^dosovitskiy2020image]: Dosovitskiy, Alexey, et al. "An image is worth 16x16 words: Transformers for image recognition at scale." (2020).‏
+
+
