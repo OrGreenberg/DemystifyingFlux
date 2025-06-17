@@ -105,10 +105,11 @@ In text-to-image generation, transformers often use **cross-attention** to condi
 <br>
 ## References
 [^kingma2013auto]: Zeng, Yu, Huchuan Lu, and Ali Borji. "Statistics of deep generated images." (2017).‏
-[^goodfellow2020generative]: Goodfellow, Ian, et al. "Generative adversarial networks." (2020).‏
+[^goodfellow2020generative]: Goodfellow, Ian, et al. "Generative adversarial networks." (2020).
 [^papamakarios2021normalizing]: Papamakarios, George, et al. "Normalizing flows for probabilistic modeling and inference." (2021).‏
 [^ramesh2021zero]: Ramesh, Aditya, et al. "Zero-shot text-to-image generation." (2021).‏ 
-[^rombach2022high]: Rombach, Robin, et al. "High-resolution image synthesis with latent diffusion models." (2022).‏
+[^rombach2022high]: Rombach, Robin, et al. "High-resolution image synthesis with latent diffusion models." (2022).
+[^ho2020denoising]: Ho, Jonathan, Ajay Jain, and Pieter Abbeel. "Denoising diffusion probabilistic models." (2020).‏‏
 [^flux2024]: Black Forest Labs. \url{https://github.com/black-forest-labs/flux}. (2024)
 [^esser2024scaling]: Esser, Patrick, et al. "Scaling rectified flow transformers for high-resolution image synthesis." (2024).‏
 [^radford2021learning]: Radford, Alec, et al. "Learning transferable visual models from natural language supervision." (2021).‏
