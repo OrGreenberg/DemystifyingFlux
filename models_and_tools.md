@@ -5,7 +5,10 @@ permalink: /models-and-tools/
 ---
 <a name="sec:hub"></a>
 
+Below is a list of the currently available models in the FLUX family. We divide them into [Text-to-Image models](#text-to-image), and [tools](#tools) which provide additional capabilities such as image editing, spatial guidance, and image variation. While new models are being released rapidly, this list is current as of June 5, 2025. You can contribute to this blog by suggesting newly released models via the blog's [GitHub Issues](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
+
 ## text-to-image
+<a name="text-to-image"></a>
 
 The FLUX.1 suite of text-to-image models comes in three variants, all share the same architecture of 12B parameters, striking a balance between accessibility and model capabilities [^FLUXAnnounce].
 
@@ -22,6 +25,7 @@ The FLUX.1 suite of text-to-image models comes in three variants, all share the 
   An enhanced version of the FLUX.1[pro] model, capable of faster image generation while also improving image quality, prompt adherence, and diversity. The model introduces new modes—**Ultra**, enabling 4× higher resolution without compromising speed, and **Raw**, producing hyper-realistic, candid-style images. Additionally, a prompt upsampling feature leverages large language models (LLMs) to expand and enrich user prompts, enhancing creative outputs. While not covered in this report, FLUX 1.1 Pro is available via API on platforms like Replicate and Fal.ai, with commercial licensing required.
 
 ## tools
+<a name="tools"></a>
 
 Originally developed for text-to-image generation, FLUX.1 has since been extended by Black Forest Labs with a suite of tools supporting a range of use cases beyond its original purpose. This report does not explore each tool in depth as it does for the FLUX.1 model itself. Below is a list of publicly available tools, current as of June 5th, 2025:
 
@@ -44,5 +48,6 @@ Originally developed for text-to-image generation, FLUX.1 has since been extende
 ---
 <br>
 ## References
-[^sauer2023stylegan]: Sauer et al., “StyleGAN-T: Unlocking the Power of GANs for Fast, High-Resolution Text-to-Image Synthesis”, (2023).
+[^meng2023distillation]: Meng, Chenlin, et al. "On distillation of guided diffusion models." (2023)‏.
+[^sauer2024fast]: Sauer, Axel, et al. "Fast high-resolution image synthesis with latent adversarial diffusion distillation." (2024).‏
 [^FLUXAnnounce]: [Black-Forest-Labs official FLUX.1 announcement](https://bfl.ai/announcements/24-08-01-bfl), (2024).
