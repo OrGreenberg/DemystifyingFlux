@@ -41,7 +41,9 @@ permalink: /
 - [3. Models and Tools](/DemystifyingFlux/models-and-tools/)
 ---
 <br>
-## [💬 Join the Discussion](https://github.com/OrGreenberg/DemystifyingFlux/discussions)
+## 💬 Contribute to the blog!
+You may report issues or point at new FLUX releases in the blog's [GitHub issues](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
+Do you want to discuss FLUX? You can do that in the blog's [GitHub discussion](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
 
 <br>
 ---
