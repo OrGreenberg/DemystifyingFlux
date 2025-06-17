@@ -75,13 +75,13 @@ The pipeline's inputs are:
 
 Once initiated with those inputs, they are preprocessed as follows:
 
-- **text:** The textual prompt is encoded using two pre-trained text encoders:  
-  - T5: provides dense (per token) embeddings, denoted *encoder hidden states*  
+- **text:** The textual prompt is being encoded using two pre-trained text encoders:  
+  - T5: provides dense (per token) embeddings, denoted *encoder hidden states*
   - CLIP: provides pooled embeddings (one embedding for the whole prompt, like CLS embedding), denoted *pooled projection*
 
 - **num_inference_steps:** Specifies the total number of sampling steps used during inference. It determines a subset of timesteps from the full diffusion range $$t \in [0:T]$$, where typically $$T=1000$$. Iterating over these selected timesteps defines the sampling trajectory.
 
-- **resolution:** The desired resolution determines the spatial dimensions of the initial (latent) noise sample $$z_0 \sim \mathcal{N}(0,1)$$. It is also used to define the *img_ids* — a set of per-token indicators, pointing at the token's spatial location on a 2D grid. Given a target resolution $$(H,W)$$ in pixel space, the corresponding latent dimensions $$(h,w)$$ are computed as $$h = \lfloor H / \text{VAE\_scale} \rfloor$$ and $$w = \lfloor W / \text{VAE\_scale} \rfloor$$ where $$\text{VAE\_scale}=8$$.  
+- **resolution:** The desired resolution determines the spatial dimensions of the initial (latent) noise sample $$z_0 \sim \mathcal{N}(0,1)$$. It is also used to define the *img_ids* — a set of per-token indicators, pointing at the token's spatial location on a 2D grid. Given a target resolution $$(H,W)$$ in pixel space, the corresponding latent dimensions $$(h,w)$$ are computed as $$h = \lfloor H / \text{VAE\_scale} \rfloor$$ and $$w = \lfloor W / \text{VAE_scale} \rfloor$$ where $$\text{VAE_scale}=8$$.  
 The image-token grid is further downsampled to dimensions $$(h//2, w//2)$$, and each token is assigned a unique identifier of the form $$(t, \hat{h}, \hat{w})$$, where $$\hat{h} \in [0:h-1]$$ and $$\hat{w} \in [0:w-1]$$, indicating the token’s location on a 2D spatial grid.  
 *text_ids* are initiated using the same structure of *img_ids*, but with $$t = h = w = 0$$ for all tokens. Formally, $$\text{text_ids} = n \cdot (0,0,0)$$ where $$n$$ is the maximal number of tokens in T5 (512).
 
@@ -110,7 +110,7 @@ Along the sampling trajectory, the transformer is initiated multiple times, once
 - The guiding parameter **timestep** is iterated from the pre-calculated list of values between **1** to **0**.
 - **hidden_state** (mostly referred to as $$z_t$$) is the latent representation which is iteratively refined from Gaussian noise into a clear image. It is updated along the sampling trajectory.
 
-![Flux Transformer: per-step inputs preprocess](figures/t_preprocess.jpg){#fig:t_preprocess}
+![Flux Transformer: per-step inputs preprocess](assets/t_preprocess.jpg){#fig:t_preprocess}
 
 As a result, the transformer pre-processes its inputs internally as described in Figure 2. Formally, the following steps are taken:
 
