@@ -11,6 +11,7 @@ permalink: /
 > ⚠️ This is an **unofficial** and **reverse-engineered** documentation project. It is not affiliated with the original authors or organizations behind FLUX.1.
 
 [Or Greenberg]<sup>1,2</sup>&nbsp;&nbsp;&nbsp;
+
 [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/or-greenberg/) [![Google Scholar](https://img.shields.io/badge/Google%20Scholar-4285F4?style=for-the-badge&logo=google-scholar&logoColor=white)](https://scholar.google.com/citations?user=p6tIB6UAAAAJ&hl=iw)
 
 <div>
