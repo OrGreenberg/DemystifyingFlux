@@ -39,6 +39,7 @@ permalink: /
 - [1. Background](/DemystifyingFlux/background/)
 - [2. FLUX.1 Architecture](/DemystifyingFlux/flux-architecture/)
 - [3. Models and Tools](/DemystifyingFlux/models-and-tools/)
+
 ---
 <br>
 ## 💬 Contribute to the blog!
