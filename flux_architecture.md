@@ -81,11 +81,11 @@ Once initiated with those inputs, they are preprocessed as follows:
 
 - **num_inference_steps:** Specifies the total number of sampling steps used during inference. It determines a subset of timesteps from the full diffusion range $$t \in [0:T]$$, where typically $$T=1000$$. Iterating over these selected timesteps defines the sampling trajectory.
 
-- **resolution:** The desired resolution determines the spatial dimensions of the initial (latent) noise sample $$z_0 \sim \mathcal{N}(0,1)$$. It is also used to define the *img_ids* — a set of per-token indicators, pointing at the token's spatial location on a 2D grid. Given a target resolution $$(H,W)$$ in pixel space, the corresponding latent dimensions $$(h,w)$$ are computed as $$h = \lfloor H / \text{VAE\_scale} \rfloor$$ and $$w = \lfloor W / \text{VAE_{scale}} \rfloor$$ where $$\text{VAE_{scale}}=8$$.  
+- **resolution:** The desired resolution determines the spatial dimensions of the initial (latent) noise sample $$z_0 \sim \mathcal{N}(0,1)$$. It is also used to define the *img_ids* — a set of per-token indicators, pointing at the token's spatial location on a 2D grid. Given a target resolution $$(H,W)$$ in pixel space, the corresponding latent dimensions $$(h,w)$$ are computed as $$h = \lfloor H / \text{VAE\_scale} \rfloor$$ and $$w = \lfloor W / \text{VAE_scale} \rfloor$$ where $$\text{VAE_scale}=8$$.  
 The image-token grid is further downsampled to dimensions $$(h//2, w//2)$$, and each token is assigned a unique identifier of the form $$(t, \hat{h}, \hat{w})$$, where $$\hat{h} \in [0:h-1]$$ and $$\hat{w} \in [0:w-1]$$, indicating the token’s location on a 2D spatial grid.  
 *text_ids* are initiated using the same structure of *img_ids*, but with $$t = h = w = 0$$ for all tokens. Formally, $$\text{text_ids} = n \cdot (0,0,0)$$ where $$n$$ is the maximal number of tokens in T5 (512).
 
-Let $$\Phi = [\text{encoder\_hidden\_states}, \text{pooled\_projection}, \text{guidance}, \text{img\_ids}, \text{text\_ids}]$$ be the pre-processed pipeline inputs. Same as in Diffusion Models, $$[z_t, t, \Phi]$$ are iteratively fed into the transformer during inference sampling, such that:
+Let $$\Phi = [\text{encoder_hidden_states}, \text{pooled_projection}, \text{guidance}, \text{img_ids}, \text{text_ids}]$$ be the pre-processed pipeline inputs. Same as in Diffusion Models, $$[z_t, t, \Phi]$$ are iteratively fed into the transformer during inference sampling, such that:
 
 $$
 \forall t \in \text{timesteps}: \quad z_{t+\Delta t} = \text{Samp}\bigl(v_\theta(z_t, t, \Phi)\bigr)
