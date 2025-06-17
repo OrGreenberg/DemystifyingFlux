@@ -35,8 +35,6 @@ permalink: /
 </div>
 
 <br>
----
-<br>
 ## 📋 This blog has 3 parts:
 - [1. Background](/DemystifyingFlux/background/)
 - [2. FLUX.1 Architecture](/DemystifyingFlux/flux-architecture/)
@@ -54,7 +52,7 @@ Do you want to discuss FLUX? You can do that in the blog's [GitHub discussion](h
 <br>
 ## 📝 Citation
 
-If you find this work useful, please cite our [paper](TODO) and [give this repo a star ⭐](https://github.com/OrGreenberg/DemystifyingFlux/stargazers):
+If you find this work useful, please cite our [technical report](TODO) and [give this repo a star ⭐](https://github.com/OrGreenberg/DemystifyingFlux/stargazers):
 
 ```bibtex
 @InProceedings{TODO,
