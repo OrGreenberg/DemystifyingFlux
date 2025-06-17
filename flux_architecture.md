@@ -62,7 +62,7 @@ In this section and in [Transformer Architecture](#transformer), we describe the
 Similar to LDM [^rombach2022high], FLUX operates in a latent space, where the final latent output is decoded to reconstruct the RGB image in pixel space. Following LDM’s approach, the authors trained a convolutional autoencoder from scratch using an adversarial objective, but scaled up the latent representation from 4 channels (in LDM) to 16 channels. A high-level overview of FLUX's sampling pipeline is presented in figure [4]("figure-4").
 
 ![Flux pipeline: high-level overview. Just like in Diffusion Models, after pre-processing the noisy latent $$z_t$$ (denoted *hidden_state*$_t$) is iteratively refined in the latent space, the final refined $$z_0$$ (=\emph{hidden_states}$_0$) is decoded into an RGB image using a pre-trained VAE decoder.](assets/pipeline.jpg)  
-**Figure 4** Flux pipeline: high-level overview. Just like in Difussion Models, after pre-processing the noisy latent $z_t$ (denoted \emph{hidden\_state}$_t$) is being iteratively refined in the latent space, the final refined $z_0$ ($=$\emph{hidden\_states}$_0$) is decoded into an RGB image using a pre-trained VAE decoder.
+**Figure 4** Flux pipeline: high-level overview. Just like in Difussion Models, after pre-processing the noisy latent $z_t$ (denoted \emph{hidden\_state}$_t$) is being iteratively refined in the latent space, the final refined $$z_0$$ ($$=$$*hidden\_states*$$_0$$) is decoded into an RGB image using a pre-trained VAE decoder.
 <a name="figure-4"></a>
 <br>
 
@@ -81,7 +81,7 @@ Once initiated with those inputs, they are preprocessed as follows:
 
 - **num_inference_steps:** Specifies the total number of sampling steps used during inference. It determines a subset of timesteps from the full diffusion range $$t \in [0:T]$$, where typically $$T=1000$$. Iterating over these selected timesteps defines the sampling trajectory.
 
-- **resolution:** The desired resolution determines the spatial dimensions of the initial (latent) noise sample $$z_0 \sim \mathcal{N}(0,1)$$. It is also used to define the *img_ids* — a set of per-token indicators, pointing at the token's spatial location on a 2D grid. Given a target resolution $$(H,W)$$ in pixel space, the corresponding latent dimensions $$(h,w)$$ are computed as $$h = \lfloor H / \text{VAE\_scale} \rfloor$$ and $$w = \lfloor W / \text{VAE_scale} \rfloor$$ where $$\text{VAE_scale}=8$$.  
+- **resolution:** The desired resolution determines the spatial dimensions of the initial (latent) noise sample $$z_0 \sim \mathcal{N}(0,1)$$. It is also used to define the *img_ids* — a set of per-token indicators, pointing at the token's spatial location on a 2D grid. Given a target resolution $$(H,W)$$ in pixel space, the corresponding latent dimensions $$(h,w)$$ are computed as $$h = \lfloor H / \text{VAE_scale} \rfloor$$ and $$w = \lfloor W / \text{VAE_scale} \rfloor$$ where $$\text{VAE_scale}=8$$.  
 The image-token grid is further downsampled to dimensions $$(h//2, w//2)$$, and each token is assigned a unique identifier of the form $$(t, \hat{h}, \hat{w})$$, where $$\hat{h} \in [0:h-1]$$ and $$\hat{w} \in [0:w-1]$$, indicating the token’s location on a 2D spatial grid.  
 *text_ids* are initiated using the same structure of *img_ids*, but with $$t = h = w = 0$$ for all tokens. Formally, $$\text{text_ids} = n \cdot (0,0,0)$$ where $$n$$ is the maximal number of tokens in T5 (512).
 
@@ -170,6 +170,8 @@ While the Double-Stream blocks apply different weights for prompt and latent emb
 <br>
 ### Comparison Between Double-Stream and Single-Stream Blocks
 
+A comparison between the Double-Stream and Single-Stream blocks is provided in Table [1]("table-1"):
+
 | Property           | Double-Stream Block                                                                 | Single-Stream Block                                                           |
 |--------------------|------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
 | **Weight Sharing**  | Uses separate weights for text and latent tokens in both attention and feedforward layers. | Uses shared weights for both text and latent tokens across attention and feedforward layers. |
@@ -182,11 +184,11 @@ While the Double-Stream blocks apply different weights for prompt and latent emb
 
 Specifically, the Double-Stream and Single-Stream blocks differ in two main attributes: weight sharing between text and latent tokens (shared vs. not shared), and computation style (sequential vs. parallel). While the exact motivation behind the FLUX authors' choice of this specific architecture is not documented, the following is a brief comparison of these attributes, highlighting the possible pros and cons of each, potentially shedding light on the reasoning behind including both block types in FLUX.1's architecture.
 
-#### Weight Sharing (Shared vs. Not Shared)
+**Weight Sharing (Shared vs. Not Shared)**
 
 Weight sharing refers to whether the same attention and feedforward parameters are used for both text and latent tokens. In the Single-Stream block, shared weights enable more efficient parameter usage and promote tighter integration between modalities, which may help the model generalize better across domains. However, this comes at the cost of reduced flexibility, as both token types must be processed identically despite potentially having very different characteristics. In contrast, the Double-Stream block avoids weight sharing, allowing the model to specialize its representations for text and latent tokens independently. This specialization can improve performance when domain-specific distinctions are critical, though it increases model size and computational overhead. The inclusion of both strategies in FLUX.1 suggests a deliberate balance between efficiency and specialization.
 
-#### Computation Style (Sequential vs. Parallel)
+**Computation Style (Sequential vs. Parallel)**
 
 The key distinction in computation style lies in how the attention and feedforward (MLP) layers are applied within a block. In the Double-Stream block, the computation is sequential: the input is first normalized, passed through an attention layer, then normalized again before being fed into the feedforward layer. This means the output of the attention block defines the input to the MLP feedforward, enabling tightly coupled, stage-wise processing that allows each layer to build upon the previous one. In contrast, the Single-Stream block follows a parallel design. The input is normalized once, and the resulting representation is simultaneously passed through both the attention and MLP layers independently. Their outputs are then combined downstream. This parallelism increases efficiency and allows for broader representation capacity per block, but it may limit the depth of inter-layer interaction present in sequential designs. FLUX.1's use of both may reflect a trade-off between expressive sequential processing and the speed or simplicity of parallel computation.
 
@@ -205,5 +207,6 @@ In summary, Single-Stream blocks emphasize efficiency and simplicity through par
 [^keddous2024vision]: Keddous et al., “Vision Pro Transformers via Adaptive Normalization”, (2024).  
 [^nichol2021glide]: Nichol et al., “GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models”, OpenAI (2021).  
 [^sauer2023stylegan]: Sauer et al., “StyleGAN-T: Unlocking the Power of GANs for Fast, High-Resolution Text-to-Image Synthesis”, (2023).
+[^ho2020denoising]: Ho, Jonathan, Ajay Jain, and Pieter Abbeel. "Denoising diffusion probabilistic models." (2020).
 [^FLUXAnnounce]: [Black-Forest-Labs official FLUX.1 announcement](https://bfl.ai/announcements/24-08-01-bfl), (2024). 
 [^rombach2022high]:Rombach, Robin, et al. "High-resolution image synthesis with latent diffusion models." (2022).‏
