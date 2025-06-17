@@ -34,10 +34,11 @@ permalink: /
 ---
 </div>
 
-## 📋 This blog has 3 parts:
-- [1. Background](/DemystifyingFlux/background/)
-- [2. FLUX.1 Architecture](/DemystifyingFlux/flux-architecture/)
-- [3. Models and Tools](/DemystifyingFlux/models-and-tools/)
+## 📋 This blog is organized into three main sections:
+
+- [1. Background](/DemystifyingFlux/background/): provides essential high-level context
+- [2. FLUX.1 Architecture](/DemystifyingFlux/flux-architecture/): explores the architecture of FLUX.1 in detail
+- [3. Models and Tools](/DemystifyingFlux/models-and-tools/): gives a brief overview of the different models in the FLUX family
 
 ---
 <br>
