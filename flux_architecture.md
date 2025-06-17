@@ -204,7 +204,7 @@ In summary, Single-Stream blocks emphasize efficiency and simplicity through par
 [^radford2021learning]: Radford et al., “Learning Transferable Visual Models From Natural Language Supervision”, OpenAI (2021).  
 [^raffel2020exploring]: Raffel et al., “Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer”, JMLR (2020).  
 [^su2024roformer]: Su et al., “RoFormer: Enhanced Transformer with Rotary Position Embedding”, (2024).  
-[^keddous2024vision]: Keddous et al., “Vision Pro Transformers via Adaptive Normalization”, (2024).  
+[^keddous2024vision]: Keddous et al., “Vision transformers inference acceleration based on adaptive layer normalization”, (2024).  
 [^nichol2021glide]: Nichol et al., “GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models”, OpenAI (2021).  
 [^sauer2023stylegan]: Sauer et al., “StyleGAN-T: Unlocking the Power of GANs for Fast, High-Resolution Text-to-Image Synthesis”, (2023).
 [^ho2020denoising]: Ho, Jonathan, Ajay Jain, and Pieter Abbeel. "Denoising diffusion probabilistic models." (2020).
