@@ -45,7 +45,7 @@ Rotary Positional Embeddings (RoPE) [^su2024roformer] are a method for injecting
 
 ### Adaptive Layer Normalization
 
-Adaptive Layer Normalization (AdaLN) [^keddous2024vision] is a conditioning mechanism used in Transformer-based models [^nichol2021glide, ^sauer2023stylegan] to modulate intermediate activations based on external input, such as text or image embeddings. Unlike standard Layer Normalization, which applies fixed scaling and shifting parameters, AdaLN dynamically generates these parameters as functions of a conditioning vector (see Figure [3](#figure-3)). This allows the model to adapt its behavior at each layer according to the input prompt or guidance signal.
+Adaptive Layer Normalization (AdaLN) [^keddous2024vision] is a conditioning mechanism used in Transformer-based models [^nichol2021glide]  [^sauer2023stylegan] to modulate intermediate activations based on external input, such as text or image embeddings. Unlike standard Layer Normalization, which applies fixed scaling and shifting parameters, AdaLN dynamically generates these parameters as functions of a conditioning vector (see Figure [3](#figure-3)). This allows the model to adapt its behavior at each layer according to the input prompt or guidance signal.
 
 ![AdaLN layer, where MSA (Multi-head Self Attention) and MLP (Multi-Layer Processor) modulation parameters are computed based on the input tensor. In Single-Stream block, MLP modulation is not computed.](assets/ADALN.jpg)  
 **Figure 3** AdaLN layer, where MSA (Multi-head Self Attention) and MLP (Multi-Layer Processor) modulation parameters are computed based on the input tensor. In Single-Stream block (see \Cref{ssec:Single}), MLP modulation is not computed. 
@@ -167,7 +167,7 @@ While the Double-Stream blocks apply different weights for prompt and latent emb
 <br>
 
 ---
-
+<br>
 ### Comparison Between Double-Stream and Single-Stream Blocks
 
 | Property           | Double-Stream Block                                                                 | Single-Stream Block                                                           |
@@ -191,11 +191,14 @@ Weight sharing refers to whether the same attention and feedforward parameters a
 The key distinction in computation style lies in how the attention and feedforward (MLP) layers are applied within a block. In the Double-Stream block, the computation is sequential: the input is first normalized, passed through an attention layer, then normalized again before being fed into the feedforward layer. This means the output of the attention block defines the input to the MLP feedforward, enabling tightly coupled, stage-wise processing that allows each layer to build upon the previous one. In contrast, the Single-Stream block follows a parallel design. The input is normalized once, and the resulting representation is simultaneously passed through both the attention and MLP layers independently. Their outputs are then combined downstream. This parallelism increases efficiency and allows for broader representation capacity per block, but it may limit the depth of inter-layer interaction present in sequential designs. FLUX.1's use of both may reflect a trade-off between expressive sequential processing and the speed or simplicity of parallel computation.
 
 ---
-
+<br>
 In summary, Single-Stream blocks emphasize efficiency and simplicity through parallel computation and shared weights, while Double-Stream blocks favor specialization and expressiveness with sequential flow and separate weights. While the Double-Stream blocks follow the *mm-DiT* design previously used in *SD3* ^[esser2024scaling], the addition of Single-Stream blocks may reflect the FLUX authors’ intention to expand the model’s capacity in a relatively lightweight and efficient manner.
 
+<br>
+---
+<br>
 ## References
-
+<br>
 [^flux2024]: FLUX.1 paper, Black Forest Labs (2024).  
 [^radford2021learning]: Radford et al., “Learning Transferable Visual Models From Natural Language Supervision”, OpenAI (2021).  
 [^raffel2020exploring]: Raffel et al., “Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer”, JMLR (2020).  
@@ -203,3 +206,5 @@ In summary, Single-Stream blocks emphasize efficiency and simplicity through par
 [^keddous2024vision]: Keddous et al., “Vision Pro Transformers via Adaptive Normalization”, (2024).  
 [^nichol2021glide]: Nichol et al., “GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models”, OpenAI (2021).  
 [^sauer2023stylegan]: Sauer et al., “StyleGAN-T: Unlocking the Power of GANs for Fast, High-Resolution Text-to-Image Synthesis”, (2023).
+[^FLUXAnnounce]: [Black-Forest-Labs official FLUX.1 announcement](#https://bfl.ai/announcements/24-08-01-bfl), 
+[^rombach2022high]:Rombach, Robin, et al. "High-resolution image synthesis with latent diffusion models." (2022).‏
