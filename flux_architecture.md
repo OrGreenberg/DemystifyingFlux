@@ -176,7 +176,9 @@ While the Double-Stream blocks apply different weights for prompt and latent emb
 | **Parallel Attention** | Parallel attention is used on concatenated latent and prompt embeddings.        | Parallel attention is used on concatenated latent and prompt embeddings.      |
 | **Computation Style**  | Attention and feedforward (MLP) layers are applied sequentially, where the attention's output defines the feedforward's input. | Attention and feedforward layers are computed in parallel using the same input for both. |
 
-*Table 1: Comparison between Double-Stream and Single-Stream blocks in FLUX.1*
+**Table 1:** Comparison between Double-Stream and Single-Stream blocks in FLUX.1
+<a name="table-1"></a>
+<br>
 
 Specifically, the Double-Stream and Single-Stream blocks differ in two main attributes: weight sharing between text and latent tokens (shared vs. not shared), and computation style (sequential vs. parallel). While the exact motivation behind the FLUX authors' choice of this specific architecture is not documented, the following is a brief comparison of these attributes, highlighting the possible pros and cons of each, potentially shedding light on the reasoning behind including both block types in FLUX.1's architecture.
 
