@@ -4,6 +4,9 @@ theme: minima
 baseurl: "/DemystifyingFlux"   # important for linking
 url: "https://orgreenberg.github.io"
 
+google_analytics: G-VFCHC4ZMRV  # ← add this line with your real tracking ID
+
+
 # Add this line:
 include: ["_includes/head-custom.html"]
 
