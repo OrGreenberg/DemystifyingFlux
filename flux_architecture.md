@@ -13,12 +13,12 @@ permalink: /flux-architecture/
 The FLUX.1 models (see [Section: Hub](#sec-hub)) demonstrate State-of-the-art (SoTA) performance for text-to-image tasks, in both terms of output quality and image-text alignment, as demonstrated in Figures [1](#figure-1) and [2](#figure-2) using the ELO-score metric, which ranks image generation models based on human preferences in head-to-head comparisons. A qualitative illustration and comparison to SD is provided in the Appendix.
 
 ![FLUX.1 defines a new state-of-the-art in image detail, prompt adherence, style diversity and scene complexity for text-to-image synthesis. Evaluation from FLUXAnnounce](assets/flux_score1.jpg)  
-**Figure 1.** FLUX.1 defines a new state-of-the-art in image detail, prompt adherence, style diversity and scene complexity for text-to-image synthesis. Evaluation from ^[FLUXAnnounce] 
+**Figure 1.** FLUX.1 defines a new state-of-the-art in image detail, prompt adherence, style diversity and scene complexity for text-to-image synthesis. Evaluation from [^FLUXAnnounce] 
 <a name="figure-1"></a>
 <br>
 
 ![ELO scores for different aspects: Prompt Following, Size/Aspect Variability, Typography, Output Diversity, Visual Quality. Evaluation from FLUXAnnounce](assets/flux_score2.jpg)  
-**Figure 2**  ELO scores for different aspects: Prompt Following, Size/Aspect Variability, Typography, Output Diversity, Visual Quality. Evaluation from ^[FLUXAnnounce]
+**Figure 2**  ELO scores for different aspects: Prompt Following, Size/Aspect Variability, Typography, Output Diversity, Visual Quality. Evaluation from [^FLUXAnnounce]
 <a name="figure-2"></a>
 <br>
 
@@ -91,7 +91,7 @@ $$
 \forall t \in \text{timesteps}: \quad z_{t+\Delta t} = \text{Samp}\bigl(v_\theta(z_t, t, \Phi)\bigr)
 $$
 
-Where $$v_\theta$$ is the trainable network that estimates the velocity vector (see [Rectified Flow](#rectified-flows)) and $$\text{Samp}(\cdot)$$ refers to the Flow-Matching Euler Discrete sampler ^[lipman2022flow]. Note that the notation here differs from the one used in Diffusion Models. Here timesteps range between 0 and 1, with $$z_1$$ the clear image and $$z_0$$ the pure Gaussian noise.
+Where $$v_\theta$$ is the trainable network that estimates the velocity vector (see [Rectified Flow](#rectified-flows)) and $$\text{Samp}(\cdot)$$ refers to the Flow-Matching Euler Discrete sampler [^lipman2022flow]. Note that the notation here differs from the one used in Diffusion Models. Here timesteps range between 0 and 1, with $$z_1$$ the clear image and $$z_0$$ the pure Gaussian noise.
 
 The final clean latent $$z_1$$ is decoded via a pre-trained VAE model to get the final image $$x_1$$. In the next section, we explore the architecture of $$v_\theta$$.
 <br>
@@ -99,7 +99,7 @@ The final clean latent $$z_1$$ is decoded via a pre-trained VAE model to get the
 ## Transformer
 <a name="transformer"></a>
 
-The core component of FLUX.1’s synthesis pipeline is the velocity predictor $$v_\theta$$, which is optimized to estimate the velocity vector along the sampling trajectory (see Section [Rectified Flows](#rectified-flows)). Similar to SD3 ^[esser2024scaling], FLUX.1 replaces the conventional *U-Net* architecture with a ffully transformer-based design. A high-level overview of the transformer’s operations at each sampling step is provided in Figure [5]("figure-5"). In this section, we describe the primary building blocks that constitute this transformer architecture.
+The core component of FLUX.1’s synthesis pipeline is the velocity predictor $$v_\theta$$, which is optimized to estimate the velocity vector along the sampling trajectory (see Section [Rectified Flows](#rectified-flows)). Similar to SD3 [^esser2024scaling], FLUX.1 replaces the conventional *U-Net* architecture with a ffully transformer-based design. A high-level overview of the transformer’s operations at each sampling step is provided in Figure [5]("figure-5"). In this section, we describe the primary building blocks that constitute this transformer architecture.
 
 ![Flux Transformer: high-level overview](assets/transformer.jpg)
 **Figure 5** Flux Transformer: high-level overview
@@ -121,7 +121,7 @@ Along the sampling trajectory, the transformer is initiated multiple times, once
 As a result, the transformer pre-processes its inputs internally as described in Figure [6]("figure-6"). Formally, the following steps are taken:
 
 - use of per-domain linear layers to bring the latent embeddings and dense-prompt-embeddings (T5) into a shared dimensionality of 3072 features per token. 
-- construction of guiding embeds. Unlike Diffusion Models, that encode only the "temporal" information (i.e, timestep) in this phase, FLUX.1 uses both the timestep and the pooled prompt embeds (from CLIP) as guiding embeddings, yet keeps the traditional notation **temb**. It uses sinusoidal projection (as in ^[ho2020denoising]) to embed the integer values of the timestep and guidance, than applies dedicated linear projection layers to each component to bring them to the shared dimensionality of 3072 features. Finally, the 3 projected embeddings are summed to create the final **temb** (marked in a red block in Figure [6]("figure-6")).
+- construction of guiding embeds. Unlike Diffusion Models, that encode only the "temporal" information (i.e, timestep) in this phase, FLUX.1 uses both the timestep and the pooled prompt embeds (from CLIP) as guiding embeddings, yet keeps the traditional notation **temb**. It uses sinusoidal projection (as in [^ho2020denoising]) to embed the integer values of the timestep and guidance, than applies dedicated linear projection layers to each component to bring them to the shared dimensionality of 3072 features. Finally, the 3 projected embeddings are summed to create the final **temb** (marked in a red block in Figure [6]("figure-6")).
 - The **img_ids** and **text_ids** (see Section [Pipeline Architecture](#pipeline-architecture)) are concatenated, than used to extract per-token positional embeds. To extract positional embeddings from 3D token indices (t,h,w), each axis is first converted to a continuous embedding using axis-specific sinusoidal frequencies scaled by a constant $$\theta$$. TThe cosine and sine of the resulting frequency-position products are computed and interleaved to form real-valued vectors. These are then concatenated across all axes to produce the final positional embedding as a pair of tensors (cosine and sine), ready to be used in rotary positional encoding (the process os composed in the purple block in Figure [6]("figure-6")). Note that this process is not influenced by **timestep** nor **hidden_states**, hence the **pos_embeds** are constant across different sampling steps.
 
 The **pos_embeds** and **temb** parameters are used to support the attention mechanism along the step, while **hidden_states** and **encoder_hidden_states** are processed and refined along the step.
