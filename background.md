@@ -113,7 +113,8 @@ In text-to-image generation, transformers often use **cross-attention** to condi
 [^flux2024]: Black Forest Labs. \url{https://github.com/black-forest-labs/flux}. (2024)
 [^esser2024scaling]: Esser, Patrick, et al. "Scaling rectified flow transformers for high-resolution image synthesis." (2024).‏
 [^radford2021learning]: Radford, Alec, et al. "Learning transferable visual models from natural language supervision." (2021).‏
-[^schuhmann2022laionb]: Schuhmann, Christoph, et al. "Laion-5b: An open large-scale dataset for training next generation image-text models." (2022).‏
+[^schuhmann2022laionb]: Schuhmann, Christoph, et al. "Laion-5b: An open large-scale dataset for training next generation image-text models." (2022).
+[^ilharco_gabriel_2021_5143773]: Cherti, M., Beaumont, R., Wightman, R., Wortsman, M., Ilharco, G., Gordon, C., ... & Jitsev, J. Reproducible scaling laws for contrastive language-image learning. (2023).‏‏
 [^podell2023sdxl]: Podell, Dustin, et al. "Sdxl: Improving latent diffusion models for high-resolution image synthesis." (2023).‏
 [^sauer2024adversarial]: Sauer, Axel, et al. "Adversarial diffusion distillation." (2024).‏
 [^liu2022flow]: Liu, Xingchao, Chengyue Gong, and Qiang Liu. "Flow straight and fast: Learning to generate and transfer data with rectified flow." (2022).‏
