@@ -61,8 +61,8 @@ In this section and in [Transformer Architecture](#transformer), we describe the
 
 Similar to LDM [^rombach2022high], FLUX operates in a latent space, where the final latent output is decoded to reconstruct the RGB image in pixel space. Following LDM’s approach, the authors trained a convolutional autoencoder from scratch using an adversarial objective, but scaled up the latent representation from 4 channels (in LDM) to 16 channels. A high-level overview of FLUX's sampling pipeline is presented in figure [4]("figure-4").
 
-![Flux pipeline: high-level overview. Just like in Diffusion Models, after pre-processing the noisy latent $$z_t$$ (denoted *hidden_state*$_t$) is iteratively refined in the latent space, the final refined $$z_0$$ (=\emph{hidden_states}$_0$) is decoded into an RGB image using a pre-trained VAE decoder.](assets/pipeline.jpg)  
-**Figure 4** Flux pipeline: high-level overview. Just like in Difussion Models, after pre-processing the noisy latent $z_t$ (denoted \emph{hidden\_state}$_t$) is being iteratively refined in the latent space, the final refined $$z_0$$ ($$=$$*hidden\_states*$$_0$$) is decoded into an RGB image using a pre-trained VAE decoder.
+![Flux pipeline: high-level overview. Just like in Diffusion Models, after pre-processing the noisy latent $$z_t$$ (denoted *hidden_state*$_t$) is iteratively refined in the latent space, the final refined $$z_0$$ (=*hidden_states*$_0$) is decoded into an RGB image using a pre-trained VAE decoder.](assets/pipeline.jpg)  
+**Figure 4** Flux pipeline: high-level overview. Just like in Difussion Models, after pre-processing the noisy latent $z_t$ (denoted *hidden\_state*$_t$) is being iteratively refined in the latent space, the final refined $$z_0$$ ($$=$$*hidden\_states*$$_0$$) is decoded into an RGB image using a pre-trained VAE decoder.
 <a name="figure-4"></a>
 <br>
 
