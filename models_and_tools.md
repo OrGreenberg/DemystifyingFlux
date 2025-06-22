@@ -51,3 +51,4 @@ Originally developed for text-to-image generation, FLUX.1 has since been extende
 [^meng2023distillation]: Meng, Chenlin, et al. "On distillation of guided diffusion models." (2023)‏.
 [^sauer2024fast]: Sauer, Axel, et al. "Fast high-resolution image synthesis with latent adversarial diffusion distillation." (2024).‏
 [^FLUXAnnounce]: [Black-Forest-Labs official FLUX.1 announcement](https://bfl.ai/announcements/24-08-01-bfl), (2024).
+[^zhai2023sigmoid]: Zhai, Xiaohua, et al. "Sigmoid loss for language image pre-training." (2023).‏
