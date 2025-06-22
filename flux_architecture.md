@@ -108,7 +108,7 @@ The core component of FLUX.1’s synthesis pipeline is the velocity predictor $$
 
 ### Step Pre-Process
 
-Along the sampling trajectory, the transformer is initiated multiple times, once for each sampling step. Every initialization uses different parameters: 
+Along the sampling trajectory, the transformer runs multiple times, once for each sampling step, where each run uses different parameters: 
 
 - The guiding parameter **timestep** is iterated from the pre-calculated list of values between **1** to **0**.
 - **hidden_state** (mostly referred to as $$z_t$$) is the latent representation which is iteratively refined from Gaussian noise into a clear image. It is updated along the sampling trajectory.
