@@ -35,19 +35,6 @@ In the following section we deep-dive into the different components of the model
 
 ---
 
-## Preliminaries  
-<a name="preliminaries"></a>
-
-In this section, we briefly describe some key pre-trained components and foundational concepts used in FLUX.1 along the sampling pipeline.
-
-### CLIP Text Encoder
-
-CLIP (Contrastive Language–Image Pretraining) [^radford2021learning] is a foundation model developed by OpenAI, designed to bridge vision and language understanding. CLIP's text-encoder transforms natural language prompts into class level or dense, high-dimensional embeddings that can be directly compared with image embeddings in a shared latent space. Trained on hundreds of millions of image–text pairs, the CLIP text encoder captures rich semantic information, enabling models to align textual descriptions with corresponding visual content effectively, making it widely used in text-to-image generation tasks.
-
-### T5 Text Encoder
-
-T5 (Text-To-Text Transfer Transformer) [^raffel2020exploring] is a versatile language model developed by Google that frames all NLP tasks—(e.g., translation, summarization, and question answering) as text-to-text problems. Its text encoder converts input text into contextualized embeddings using a Transformer-based architecture trained with a denoising objective over massive language corpora. Unlike CLIP’s text encoder, which is trained jointly with an image encoder to produce embeddings aligned with visual features for contrastive learning, T5 is trained purely on textual data and optimized for language understanding and generation. This makes T5 well-suited for providing rich, token-level semantic representations even for long and complext textual prompmts.
-
 ### Rotary Positional Embeddings
 
 Rotary Positional Embeddings (RoPE) [^su2024roformer] are a method for injecting positional information into Transformer models by rotating the query and key vectors in multi-head self-attention according to their token positions. Unlike traditional sinusoidal or learned positional embeddings that are **added** to input tokens, RoPE applies a **rotation** in the complex plane that preserves relative positional relationships across sequences. This approach allows the model to generalize better to unseen sequence lengths and supports extrapolation beyond training data. RoPE has become popular in recent vision-language models, where understanding spatial relationships between tokens, especially when repurposing textual positions for image patches, is crucial.
@@ -60,9 +47,10 @@ Adaptive Layer Normalization (AdaLN) [^keddous2024vision] is a conditioning mech
 **Figure 3** AdaLN layer, where MSA (Multi-head Self Attention) and MLP (Multi-Layer Processor) modulation parameters are computed based on the input tensor. In Single-Stream block (see \Cref{ssec:Single}), MLP modulation is not computed. 
 <a name="figure-3"></a>
 
-<br>
+
 ---
 <br>
+
 ## FLUX.1 Sampling Pipeline  
 <a name="pipeline-architecture"></a>
 
@@ -123,19 +111,30 @@ $$
 Where $$v_\theta$$ is the trainable network that estimates the velocity vector (see [Rectified Flow](#rectified-flows)) and $$\text{Samp}(\cdot)$$ refers to the Flow-Matching Euler Discrete sampler [^lipman2022flow]. Pay attention to the notation that differs from the one used in Diffusion Models. Here timesteps range between $$0$$ and $$1$$, with $$z_1$$ the clear image and $$z_0$$ the pure Gaussian noise. In Section [Transformer]("Flux.1-Tranformer") we explore the architecture of $$v_\theta$$.
 
 After the iterative refinement, the final clean latent $$z_1$$ is decoded via pre-trained *VAE* model to get the final image $$x_1$$. 
+
+---
 <br>
 
 ## Transformer
 <a name="Flux.1-Tranformer"></a>
 
-The core component of FLUX.1’s synthesis pipeline is the velocity predictor $$v_\theta$$, which is optimized to estimate the velocity vector along the sampling trajectory (see Section [Rectified Flows](#rectified-flows)). Similar to SD3 [^esser2024scaling], FLUX.1 replaces the conventional *U-Net* architecture with a ffully transformer-based design. A high-level overview of the transformer’s operations at each sampling step is provided in Figure [5]("figure-5"). In this section, we describe the primary building blocks that constitute this transformer architecture.
+The core component of FLUX.1’s synthesis pipeline is the velocity predictor $$v_\theta$$, which is optimized to estimate the velocity vector along the sampling trajectory (see Section [Rectified Flows](#rectified-flows)). Similar to SD3 [^esser2024scaling], FLUX.1 replaces the conventional *U-Net* architecture with a fully transformer-based design. 
+
+A high-level overview of the transformer’s operations at each sampling step is provided in Figure [5]("figure-5") using the notation defined in the official implementation by *diffusers* [^diffusers2022]. 
 
 ![Flux Transformer: high-level overview](assets/transformer.jpg)
-**Figure 5** Flux Transformer: high-level overview
+**Figure 5** Flux Transformer: high-level overview.
 <a name="figure-5"></a>
 <br>
 
+On every iteration, the inputs are preprocessed before they ate fed into a sequence of transformer blocks. 
+
+There are two types of transformer blocks: $$(1)$$ **Double-Stream** (see  Section [Double Transformer Block]("double-block")), and $$(2)$$ **Single-Stream* (see Section [Single Transformer Block]("single-block").
+
+Both blocks employ *Multi-Modal Attention*: a joint self-attention mechanism to process concatenated text and image tokens in a unified attention operation, enabling bidirectional interactions that capture both self-information and cross-modal information between text and image modalities. Below we provide a step-by-step guide to the [per-iteration pre-process]("step-pre"), and the [*Double-Stream*]("double-block") and [*Single-Stream*]("single-block") attention blocks.
+
 ### Step Pre-Process
+<a name="step-pre"></a>
 
 Along the sampling trajectory, the transformer runs multiple times, once for each sampling step, where each run uses different parameters: 
 
