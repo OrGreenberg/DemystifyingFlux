@@ -49,8 +49,7 @@ The 1.x versions of Stable Diffusion (1.0 to 1.5) introduced this efficient fram
 
 **Stable Diffusion v2.1** introduced several architectural upgrades, including a switch to OpenCLIP [^ilharco_gabriel_2021_5143773] and training on higher resolutions ($$768×768$$), improving image structure and fidelity. **SDXL** [^podell2023sdxl], a major advancement in the series, uses a two-stage architecture with separate base and refiner models, allowing better handling of complex prompts and achieving significantly improved realism and prompt alignment. **SD-Turbo** [^sauer2024adversarial] further innovates by enabling near real-time image generation through a Adversarial-diffusion-distillation (ADD) process, where a student model trains to mimic the performance of a teacher model (SD2.1 or SDXL) using fewer inference steps.
 
-Most recently, **Stable Diffusion 3** (SD3) [^esser2024scaling] integrates a diffusion transformer backbone and adopts multimodal training (see \Cref{subsec:transformer} below), combining both text and image understanding for improved prompt adherence, compositional reasoning, and consistency. SD3 is designed for scalability and robustness, closing the gap between open models and proprietary systems like DALL·E 3 and Midjourney in terms of controllability and quality.
-
+Most recently, **Stable Diffusion 3** (SD3) [^esser2024scaling] integrates a diffusion transformer backbone and adopts multimodal training (see [Section: transormers](#transformers) below), combining both text and image understanding for improved prompt adherence, compositional reasoning, and consistency. SD3 is designed for scalability and robustness, closing the gap between open models and proprietary systems like DALL·E 3 and Midjourney in terms of controllability and quality.
 
 ---
 <br>
