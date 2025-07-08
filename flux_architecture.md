@@ -6,11 +6,11 @@ permalink: /flux-architecture/
 
 # FLUX.1 Architecture
 
-## Intro
+## Introduction
 
-**FLUX.1** [^flux2024] is a rectified flow transformer trained in the latent space of an image encoder, introduced by **Black Forest Labs** in August 2024.
+**FLUX.1** [^flux2024] is a Rectified-Flow transformer trained in the latent space of an image encoder, introduced by **Black Forest Labs** in August 2024.
 
-The FLUX.1 models (see [Section: Hub](#sec-hub)) demonstrate State-of-the-art (SoTA) performance for text-to-image tasks, in both terms of output quality and image-text alignment, as demonstrated in Figures [1](#figure-1) and [2](#figure-2) using the ELO-score metric, which ranks image generation models based on human preferences in head-to-head comparisons. A qualitative illustration and comparison to SD is provided in the Appendix.
+The FLUX.1 models (see [Section: Hub](#sec-hub)) demonstrate State-of-the-art (SoTA) performance for text-to-image tasks, in both terms of output quality and image-text alignment, as demonstrated in Figures [1](#figure-1) and [2](#figure-2) using the ELO-score metric, which ranks image generation models based on human preferences in head-to-head comparisons.
 
 ![FLUX.1 defines a new state-of-the-art in image detail, prompt adherence, style diversity and scene complexity for text-to-image synthesis. Evaluation from FLUXAnnounce](assets/flux_score1.jpg)  
 **Figure 1.** FLUX.1 defines a new state-of-the-art in image detail, prompt adherence, style diversity and scene complexity for text-to-image synthesis. Evaluation from [^FLUXAnnounce] 
@@ -22,7 +22,16 @@ The FLUX.1 models (see [Section: Hub](#sec-hub)) demonstrate State-of-the-art (S
 <a name="figure-2"></a>
 <br>
 
-While the model likely adheres to the Rectified Flow training paradigm, the exact details regarding the training setup - including the dataset, scheduling strategy, and hyperparameters — have not been publicly disclosed. However, the model’s architecture and inference scheme can be reverse-engineered from the publicly available inference code. In this section, we outline the model’s architecture to demystify its behavior at inference time. We begin by introducing key pre-trained components and foundational concepts in [Preliminaries](#preliminaries), followed by a detailed breakdown of the model’s individual blocks in [Transformer](#transformer) and the end-to-end inference pipeline in [Architecture](#pipeline-architecture ), which together constitute its text-to-image generation mechanism.
+While the model adheres to the Rectified Flow training paradigm (according to the developers statement), the exact details regarding the training setup —including the dataset, scheduling strategy, and hyperparameters— have not been publicly disclosed. However, the model’s architecture and inference scheme can be reverse-engineered from the publicly available inference code. 
+
+In this section, we outline the model’s architecture to demystify its behavior at inference time. A top-view of the architecture is illustrated in Figure [3](#figure-3), where text embeddings and latent image embeddings are iteratively processed via a series of attention blocks. In the following section we deep-dive into the different components of the model.
+
+![High-level overview of the FLUX.1 architecture. Text embeddings and latent image embeddings are iteratively processed through a series of attention blocks to generate a text-conditioned image. ](assets/top-view.jpg)  
+**Figure 3.** High-level overview of the FLUX.1 architecture. Text embeddings and latent image embeddings are iteratively processed through a series of attention blocks to generate a text-conditioned image. 
+<a name="figure-3"></a>
+<br>
+
+In the following section we deep-dive into the different components of the model. We begin with a high-level overview of FLUX’s sampling pipeline in [FLUX.1 Sampling Pipeline](#pipeline-architecture), highlighting the key stages and the pre-trained components involved, followed by a deep-dive into the transformer's architecture in [Transformer](#transformer), where a detailed explanation is provided to the different stages and concepts used to construct it.
 
 ---
 
@@ -54,8 +63,17 @@ Adaptive Layer Normalization (AdaLN) [^keddous2024vision] is a conditioning mech
 <br>
 ---
 <br>
-## Pipeline Architecture  
+## FLUX.1 Sampling Pipeline  
 <a name="pipeline-architecture"></a>
+
+In this section, we describe the sampling pipeline of FLUX.1. For simplicity, we refer to the text-to-image sampling process as being conditioned on a single prompt per sample.
+
+Similar to LDM [^rombach2022high], FLUX operates in a latent space, where the final latent output is decoded to reconstruct the RGB image in pixel space. Following LDM’s approach, the developers trained a convolutional autoencoder from scratch using an adversarial objective, but scaled up the latent representation from 4 channels (in LDM) to 16 channels.
+
+The sampling pipeline consists of three phases: $$(1)$$ *Initiation and Pre-processing* $$(2)$$ *Iterative Refinement*, and $$(3)$$ *Post-processing*. An overview of these steps is illustrated in Figure [4]("figure-4"), where the notations follows the ones used in the official implementation of FLUX.1 pipeline in diffusers \cite{von-platen-etal-2022-diffusers}.
+
+
+
 
 In this section and in [Transformer Architecture](#transformer), we describe the architecture and sampling pipeline of FLUX.1. For simplicity, we refer to the text-to-image sampling process as being conditioned on a single prompt per sample.
 
@@ -210,5 +228,7 @@ In summary, Single-Stream blocks emphasize efficiency and simplicity through par
 [^ho2020denoising]: Ho, Jonathan, Ajay Jain, and Pieter Abbeel. "Denoising diffusion probabilistic models." (2020).
 [^FLUXAnnounce]: [Black-Forest-Labs official FLUX.1 announcement](https://bfl.ai/announcements/24-08-01-bfl), (2024). 
 [^rombach2022high]:Rombach, Robin, et al. "High-resolution image synthesis with latent diffusion models." (2022).
-[^esser2024scaling]: Esser, Patrick, et al. "Scaling rectified flow transformers for high-resolution image synthesis." (2024).‏
+[^esser2024scaling]: Esser, Patrick, et al. "Scaling rectified flow transformers for high-resolution image synthesis." (2024).
+[^diffusers2022]: Von Platen, Patrick and Patil, Suraj et al., ["Diffusers: State-of-the-art diffusion models"]["https://github.com/huggingface/diffusers"] (2022) 
+[]‏
 ‏
