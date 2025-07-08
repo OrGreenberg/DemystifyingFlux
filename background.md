@@ -99,7 +99,7 @@ While originally $$Q$$/$$K$$/$$V$$ represenations are all projected from the sam
 
 <br>
 ---
-<br>
+
 ## References
 [^kingma2013auto]: Zeng, Yu, Huchuan Lu, and Ali Borji. "Statistics of deep generated images." (2017).‏
 [^goodfellow2020generative]: Goodfellow, Ian, et al. "Generative adversarial networks." (2020).
