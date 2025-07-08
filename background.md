@@ -4,36 +4,46 @@ title: "Background"
 permalink: /background/
 ---
 ---
-To better understand the foundations of **FLUX**, we briefly present several key models and methods that preceded it and influenced its design. This overview is intentionally high-level, aiming only to provide the essential background necessary to grasp the core principles behind FLUX. For readers interested in a deeper exploration of these foundational works, references to the original papers and technical reports are provided throughout this section.
+To better understand the foundations of FLUX.1, we briefly present several key models and methods that preceded it and influenced its design. This overview is intentionally high-level, aiming only to provide the essential background necessary to grasp the core principles behind FLUX. For readers interested in a deeper exploration of these foundational works, references to the original papers and technical reports are provided throughout this section.
 
 ---
 <br>
-## Image Synthesis
+## ML-Based Image Generation
 <a name="image-synthesis"></a>
 
-The task of *image synthesis* refers to a family of models designed to generate novel samples from a simple distribution that emulates a source dataset. Specifically, image synthesis models learn to map a dataset of images to a simple distribution (e.g., Gaussian), from which new images can be sampled. Several types of generative models have been developed in recent years, including—but not limited to- Variational Autoencoders (VAEs) [^kingma2013auto], Generative Adversarial Networks (GANs) [^goodfellow2020generative], Normalizing Flows (NFs) [^papamakarios2021normalizing] and Diffusion Models (DMs) [^ho2020denoising].
+The task of ML-based image generation refers to a family of models designed to generate novel samples from a simple distribution that emulates a source dataset. Specifically, some models learn to map a dataset of images to a simple distribution (e.g., Gaussian), from which new images can be sampled. Several types of generative models have been developed in recent years, including—but not limited to—Variational Autoencoders (VAEs) [^kingma2013auto], Generative Adversarial Networks (GANs) [^goodfellow2020generative], Normalizing Flows (NFs) [^papamakarios2021normalizing] and Diffusion Models (DMs) [^ho2020denoising].
 
-Among these, **text-to-image models** such as DALL·E [^ramesh2021zero], Stable Diffusion [^rombach2022high], and FLUX [^flux2024] have achieved state-of-the-art performance and are widely used in applications that generate high-quality images from textual instructions, commonly referred to as *prompts*.
+Among these, **text-to-image models** (e.g., DALL·E [^ramesh2021zero], Stable Diffusion [^rombach2022high], and FLUX [^flux2024]) have achieved state-of-the-art performance and are widely used in applications that generate high-quality images from textual instructions, commonly referred to as *prompts*.
 
 ---
 <br>
 ## Diffusion Models
 <a name="diffusion-models"></a>
 
-**Diffusion Models (DMs)** [^ho2020denoising] are a class of text-to-image generative models that have recently emerged as state-of-the-art (SoTA) in image synthesis. They work by learning to reverse a gradual noising process applied to training data.
+Within this scope, **Diffusion Models** (DMs) [^ho2020denoising] have recently emerged as the state-of-the-art (SoTA) approach for text-conditioned image generation. They work by learning to reverse a gradual noising process applied to training data. While early diffusion models relied on U-Net architectures composed of convolutional layers augmented with attention mechanisms for image–text alignment, recent models such as SD3 [^esser2024scaling] and FLUX.1 [^flux2024] have transitioned to fully Transformer-based architectures for the denoising process, offering improved scalability and context modeling. During the training process, clean images are incrementally corrupted by Gaussian noise whose magnitude is determined by a timestep-specific schedule, and the model learns to iteratively denoise them. 
 
-While early diffusion models relied on U-Net architectures composed of convolutional layers augmented with attention mechanisms for image–text alignment, recent models such as SD3 [^esser2024scaling] and FLUX.1 [^flux2024] have transitioned to **fully Transformer-based architectures**, offering improved scalability and context modeling.
+In the most common version of DM optimization, the model is trained to predict the normalized added noise $\epsilon$, and optimized using a reconstruction loss. It is formulated as:
 
-During training, clean images are progressively corrupted with Gaussian noise over a series of time steps, and the model is trained to denoise the corrupted images step-by-step. At inference time, the model starts from pure noise and iteratively denoises it to generate realistic samples.
+$$
+\mathcal{L}_\epsilon = \mathbb{E}_{x_t,\epsilon,t}\left[  \|\epsilon_\theta(x_t,t) - \epsilon\|^2  \right]
+$$
 
-Unlike earlier generative approaches such as GANs, which rely on adversarial training, diffusion models optimize a **likelihood-based objective**. They are therefore known for their training stability and high-quality outputs, especially in high-resolution image synthesis.
+where:
 
-Their iterative nature allows fine-grained control over the generation process, enabling powerful applications such as Super-resolution, Inpainting and Text-conditioned image generation.
+$$
+x_t = \sqrt{\alpha_t}x_0 + \sqrt{1 - \alpha_t}\epsilon
+$$
+
+represent the noisy version of the clean image $$x_0$$, corrupted by the gaussian noise $$\epsilon \sim \mathcal{N}(0,1)$$ to timestep $$t$$.
+
+At inference time, the model begins from pure Gaussian noise and iteratively denoises it to produce realistic images. Unlike earlier generative models such as GANs, which rely on adversarial training, diffusion models optimize a reconstruction-based objective. This leads to more stable training and superior output quality, particularly for high-resolution image synthesis. Moreover, they offer fine-grained control over the generation process, enabling powerful applications such as super-resolution, inpainting, and text-conditioned image generation.
 
 ---
 <br>
 ## Stable Diffusion
 <a name="stable-diffusion"></a>
+
+Within this scope, Diffusion Models (DMs) \cite{ho2020denoising} have recently emerged as the state-of-the-art (SoTA) approach for text-conditioned image generation. They work by learning to reverse a gradual noising process applied to training data. While early diffusion models relied on U-Net architectures composed of convolutional layers augmented with attention mechanisms for image–text alignment, recent models such as SD3 \cite{esser2024scaling} and FLUX.1 \cite{flux2024} have transitioned to fully Transformer-based architectures for the denoising process, offering improved scalability and context modeling. During the training process, clean images are incrementally corrupted by Gaussian noise whose magnitude is determined by a timestep-specific schedule, and the model learns to iteratively denoise them. 
 
 **Stable Diffusion** is a family of *latent diffusion models* (LDMs) [^rombach2022high] designed to generate high-quality images conditioned on textual prompts. Unlike traditional pixel-space diffusion models, LDMs operate in a compressed latent space, significantly improving computational efficiency while maintaining visual fidelity. This is achieved by encoding input images into a lower-dimensional latent representation using a pre-trained autoencoder. The diffusion process is then applied in this latent space, and the final output is decoded back into pixel space.
 
