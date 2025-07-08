@@ -25,6 +25,9 @@ permalink: /
 
 <br/>
 
+If you find this work useful, please cite our [technical report](TODO) and [give this repo a star ⭐](https://github.com/OrGreenberg/DemystifyingFlux/stargazers):
+<br/>
+
 ![image](https://github.com/user-attachments/assets/7136918d-0356-4cca-a516-b88de55bf327)
 <br>
 
@@ -32,7 +35,7 @@ permalink: /
 <br>
 ## 📄 Abstract
 
-*FLUX.1* is a diffusion-based text-to-image generation model developed by Black Forest Labs, designed to achieve faithful text-image alignment while maintaining high image quality and diversity. FLUX is considered state-of-the-art in image synthesis, outperforming popular models such as Midjourney, DALL·E 3, Stable Diffusion 3 (SD3), and SDXL. Although publicly available as open source, the authors have not released official technical documentation detailing the model’s architecture or training setup. This report summarizes an extensive reverse-engineering effort aimed at demystifying FLUX’s architecture directly from its source code, to support its adoption as a backbone for future research and development.
+*FLUX.1* is a diffusion-based text-to-image generation model developed by Black Forest Labs, designed to achieve faithful text-image alignment while maintaining high image quality and diversity. FLUX is considered state-of-the-art in text-to-image generation, outperforming popular models such as Midjourney, DALL·E 3, Stable Diffusion 3 (SD3), and SDXL. Although publicly available as open source, the authors have not released official technical documentation detailing the model’s architecture or training setup. This report summarizes an extensive reverse-engineering effort aimed at demystifying FLUX’s architecture directly from its source code, to support its adoption as a backbone for future research and development. This document is an *unofficial* technical report and is **not published or endorsed by the original developers or their affiliated institutions**
 
 ---
 </div>
@@ -53,8 +56,6 @@ permalink: /
 ---
 <br>
 ## 📝 Citation
-
-If you find this work useful, please cite our [technical report](TODO) and [give this repo a star ⭐](https://github.com/OrGreenberg/DemystifyingFlux/stargazers):
 
 ```bibtex
 @InProceedings{TODO,
