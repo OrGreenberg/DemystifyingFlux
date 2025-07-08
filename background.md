@@ -97,10 +97,11 @@ For vision tasks, Vision Transformers (ViTs) [^dosovitskiy2020image] tokenize an
 
 While originally $$Q$$/$$K$$/$$V$$ represenations are all projected from the same input embedding in a process denotes *Self-Attention*, In text-to-image generation, transformers often use *Cross-Attention* to condition image synthesis on textual prompts. In this setup, the queries ($$Q$$) are projected from the image tokens, while the keys ($$K$$) and values ($$V$$) are projected from the text embeddings. This allows the model to modulate image generation based on semantic information from the prompt.
 
-<br>
----
 
+---
+<br>
 ## References
+
 [^kingma2013auto]: Zeng, Yu, Huchuan Lu, and Ali Borji. "Statistics of deep generated images." (2017).‏
 [^goodfellow2020generative]: Goodfellow, Ian, et al. "Generative adversarial networks." (2020).
 [^papamakarios2021normalizing]: Papamakarios, George, et al. "Normalizing flows for probabilistic modeling and inference." (2021).
