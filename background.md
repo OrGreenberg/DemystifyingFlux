@@ -49,33 +49,22 @@ The 1.x versions of Stable Diffusion (1.0 to 1.5) introduced this efficient fram
 
 **Stable Diffusion v2.1** introduced several architectural upgrades, including a switch to OpenCLIP [^ilharco_gabriel_2021_5143773] and training on higher resolutions ($$768×768$$), improving image structure and fidelity. **SDXL** [^podell2023sdxl], a major advancement in the series, uses a two-stage architecture with separate base and refiner models, allowing better handling of complex prompts and achieving significantly improved realism and prompt alignment. **SD-Turbo** [^sauer2024adversarial] further innovates by enabling near real-time image generation through a Adversarial-diffusion-distillation (ADD) process, where a student model trains to mimic the performance of a teacher model (SD2.1 or SDXL) using fewer inference steps.
 
-Most recently, **Stable Diffusion 3** (SD3) [^esser2024scaling] integrates a diffusion transformer backbone and adopts multimodal training (see [Section: transormers](#transformers) below), combining both text and image understanding for improved prompt adherence, compositional reasoning, and consistency. SD3 is designed for scalability and robustness, closing the gap between open models and proprietary systems like DALL·E 3 and Midjourney in terms of controllability and quality.
+Most recently, **Stable Diffusion 3** (SD3) [^esser2024scaling] integrates a diffusion transformer backbone and adopts multimodal training (see [Section: transormers](#transformers)), combining both text and image understanding for improved prompt adherence, compositional reasoning, and consistency. SD3 is designed for scalability and robustness, closing the gap between open models and proprietary systems like DALL·E 3 and Midjourney in terms of controllability and quality.
 
 ---
 <br>
 ## Rectified Flows
 <a name="rectified-flows"></a>
 
+**Rectified Flows** (RF) [^liu2022flow] is a recent generative modeling framework that simplifies and generalizes diffusion models by replacing stochastic denoising with a deterministic vector field, based on the *Flow Matching* principle introduced in [^lipman2022flow]. 
 
-**Rectified Flow** [^liu2022flow] is a recent generative modeling framework that simplifies and generalizes diffusion models by replacing stochastic denoising with a **deterministic vector field**, based on *Flow Matching* [^lipman2022flow].
+While RF is a training paradigm rather than an architectural change, its relevance to FLUX.1 stems from the fact that FLUX.1 was trained using this method. In this blog, we do not provide a detailed explanation of Rectified Flow. Instead, we briefly highlight the key distinction between standard diffusion model training and the approach used in FLUX. This divergence in training schemes likely contributes to differences in performance and convergence behavior. For a comprehensive understanding of Rectified Flow, we refer readers to the original works.
 
-While diffusion models (such as DDPMs [^ho2020denoising]) learn to predict the noise ($$\epsilon$$) added during a forward diffusion process, Rectified Flow trains a model to predict a velocity vector $v$ that directly points from a noisy point $$x_0$$ (not to be confused with DM notation, where $$x_0$$ denotes the "clear" image) back to the data point $$x_1$$, along a straight interpolation path.
+While diffusion models (such as **DDPMs** [^ho2020denoising]) learn to predict the noise ($$\epsilon$$) added during a forward diffusion process (see [Section: Diffusion Models](#diffusion-models)), RFs train a model to predict a velocity vector $$v$$ that directly points from a noisy point $$x_0$$ (not to be confused with DM notation, where $$x_0$$ denotes the ``clean'' image) back to the data point $$x_1$$, along a straight interpolation path.
 
-In diffusion models, the network is trained using the epsilon objective, which minimizes the difference between the predicted noise $$\epsilon_\theta(x_t,t)$$ and true noise $$\epsilon$$ added to a sample:
+In diffusion models, the network is trained using the $\epsilon$-objective, which minimizes the difference between the predicted noise $\epsilon_\theta(x_t,t)$ and true noise $\epsilon$ added to a sample (see formulation in [Section: Diffusion Models](#diffusion-models)).
 
-$$
-\mathcal{L}_\epsilon = \mathbb{E}_{x_t,\epsilon,t}\left[  \|\epsilon_\theta(x_t,t) - \epsilon\|^2  \right]
-$$
-
-where:
-
-$$
-x_t = \sqrt{\alpha_t}x + \sqrt{1 - \alpha_t}\epsilon
-$$
-
-represent the noisy image $$x$$ at timestep $$t$$.
-
-In contrast, Rectified-Flow defines a deterministic interpolation between the data $$x_1$$ and noise $$x_0$$, and trains the model $$v_\theta$$ to predict the velocity vector between the two:
+In contrast, RF defines a deterministic interpolation between the data $$x_1$$ and noise $$x_0$$, and trains the model $$v_\theta$$ to predict the velocity vector between the two:
 
 $$
 \mathcal{L}_v = \mathbb{E}_{x_0,x_1,t}
@@ -87,26 +76,26 @@ where $$x_t=(1-t)x_0 + tx_1$$ is a linear interpolation between $$x_0 \sim \math
 
 Unlike diffusion models that rely on stochastic sampling, noise schedules, and denoising objectives, Rectified Flow leverages a velocity-based formulation that defines a deterministic transport path from noise to data. This approach eliminates the need for iterative noise perturbation and reverse denoising, enabling faster and more stable image synthesis. By solving a simple ODE with a learned velocity field, Rectified Flow achieves high-quality generation with significantly reduces complexity in both training and inference—making it a compelling and efficient alternative to traditional diffusion-based methods.
 
-While Rectified Flow is a training technique rather than an architectural innovation, its relevance to FLUX lies in the fact that FLUX was trained using this paradigm. Although this report primarily focuses on architectural aspects, we include this subsection to highlight the role Rectified Flow plays in shaping FLUX's performance and convergence behavior.
-
 ---
 <br>
 ## Transformers
 <a name="transformers"></a>
 
-**Transformers** are a class of neural network architectures originally developed for NLP tasks [^vaswani2017attention]. Their core innovation is the **self-attention mechanism**, which lets the model learn relationships between all elements in a sequence.
+**Transformers** are a class of neural network architectures originally developed for natural language processing (NLP) tasks [^vaswani2017attention]. 
 
-In each attention block, queries (Q), keys (K), and values (V) are computed via learned projections:
+The transformer’s core innovation is the *self-attention* mechanism, which enables the model to weigh relationships between all elements in an input sequence. This architecture has since become the foundation of many state-of-the-art models across modalities—including text, image, video, and multimodal systems.
+
+In each attention block, the model computes three matrices from the input embeddings: queries (Q), keys (K), and values (V), using learned linear projections. The attention scores are computed as:
 
 $$
 \text{Attention}(Q, K, V) = \text{softmax}\left( \frac{QK^T}{\sqrt{d_k}} \right)V
 $$
 
-Where $$d_k$$ is the dimensionality of keys and the Softmax operation ensures the attention scores sum to 1. This mechanism allows the model to assign different levels of importance to different tokens when computing a new representation for each token in the sequence. In practice, multi-head attention is used, where multiple sets of $$Q$$/$$K$$/$$V$$ projections are computed in parallel to capture diverse types of relationships.
+Here, $$d_k$$ is the dimensionality of the key vectors, and the softmax operation ensures the attention weights sum to 1. This mechanism allows the model to assign different levels of importance to different tokens when computing a new representation for each token in the sequence. In practice, multi-head attention is used, where multiple sets of $$Q$$/$$K$$/$$V$$ projections are computed in parallel to capture diverse types of relationships.
 
-For vision tasks, Vision Transformers (ViTs) [^dosovitskiy2020image] tokenize an image into fixed-size non-overlapping patches (e.g., $16\times16$ pixels), flatten each patch, and project them into an embedding space. These patch embeddings are then processed by a standard transformer encoder, often with added positional encodings to preserve spatial structure. This enables ViTs to model long-range dependencies across an image without convolutional inductive biases.
+For vision tasks, Vision Transformers (ViTs) [^dosovitskiy2020image] tokenize an image into fixed-size non-overlapping patches (e.g., $16\times16$ pixels),flatten each patch, and project them into an embedding space. These patch embeddings are then processed by a standard transformer encoder, often with added positional encodings to preserve spatial structure. This enables ViTs to model long-range dependencies across an image without convolutional inductive biases.
 
-In text-to-image generation, transformers often use **cross-attention** to condition image synthesis on textual prompts. In this setup, the image tokens (or latent features in the case of latent diffusion) act as queries, while the text embeddings serve as keys and values. This allows the model to modulate image generation based on semantic information from the prompt.
+While originally $$Q$$/$$K$$/$$V$$ represenations are all projected from the same input embedding in a process denotes *Self-Attention*, In text-to-image generation, transformers often use *Cross-Attention* to condition image synthesis on textual prompts. In this setup, the queries ($$Q$$) are projected from the image tokens, while the keys ($$K$$) and values ($$V$$) are projected from the text embeddings. This allows the model to modulate image generation based on semantic information from the prompt.
 
 <br>
 ---
