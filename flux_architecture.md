@@ -70,28 +70,37 @@ In this section, we describe the sampling pipeline of FLUX.1. For simplicity, we
 
 Similar to LDM [^rombach2022high], FLUX operates in a latent space, where the final latent output is decoded to reconstruct the RGB image in pixel space. Following LDM’s approach, the developers trained a convolutional autoencoder from scratch using an adversarial objective, but scaled up the latent representation from 4 channels (in LDM) to 16 channels.
 
-The sampling pipeline consists of three phases: $$(1)$$ *Initiation and Pre-processing* $$(2)$$ *Iterative Refinement*, and $$(3)$$ *Post-processing*. An overview of these steps is illustrated in Figure [4]("figure-4"), where the notations follows the ones used in the official implementation of FLUX.1 pipeline in diffusers \cite{von-platen-etal-2022-diffusers}.
-
-
-
-
-In this section and in [Transformer Architecture](#transformer), we describe the architecture and sampling pipeline of FLUX.1. For simplicity, we refer to the text-to-image sampling process as being conditioned on a single prompt per sample.
-
-Similar to LDM [^rombach2022high], FLUX operates in a latent space, where the final latent output is decoded to reconstruct the RGB image in pixel space. Following LDM’s approach, the authors trained a convolutional autoencoder from scratch using an adversarial objective, but scaled up the latent representation from 4 channels (in LDM) to 16 channels. A high-level overview of FLUX's sampling pipeline is presented in figure [4]("figure-4").
+The sampling pipeline consists of three phases: $$(1)$$ *Initiation and Pre-processing* $$(2)$$ *Iterative Refinement*, and $$(3)$$ *Post-processing*. An overview of these steps is illustrated in Figure [4]("figure-4"), where the notations follows the ones used in the official implementation of FLUX.1 pipeline in the *diffusers* [^diffusers2022] library.
 
 ![Flux pipeline: high-level overview. Just like in Diffusion Models, after pre-processing the noisy latent $$z_t$$ (denoted *hidden_state*$_t$) is iteratively refined in the latent space, the final refined $$z_0$$ (=*hidden_states*$_0$) is decoded into an RGB image using a pre-trained VAE decoder.](assets/pipeline.jpg)  
 **Figure 4** Flux pipeline: high-level overview. Just like in Difussion Models, after pre-processing the noisy latent $z_t$ (denoted *hidden\_state*$_t$) is being iteratively refined in the latent space, the final refined $$z_0$$ ($$=$$*hidden\_states*$$_0$$) is decoded into an RGB image using a pre-trained VAE decoder.
 <a name="figure-4"></a>
 <br>
 
-The pipeline's inputs are:
+In the section below, we primarily focus on the *Initiation and Pre-processing* phase of the pipeline. A brief overview  of the *Iterative Refinement* and *Post-processing* phases is provided at the end of this section. The *Iterative Refinement* phase, in which the FLUX transformer operates, is discussed in detail in Section [Transformer]("Flux.1-Tranformer").
 
-- **text:** textual prompt describing the output.
+### Initiation and Pre-processing
+<a name="sec-init"></a>
+<br>
+
+
+In this phase, the model processes the user-provided inputs to prepare them for the main transformer’s refinement stage. A key component of this stage is the text encoder, which processes the textual guidance supplied by the user. FLUX.1 utilizes two pre-trained text encoders:
+
+**CLIP Text Encoder.** 
+CLIP (Contrastive Language–Image Pretraining) [^radford2021learning] is a foundation model developed by OpenAI, designed to bridge vision and language understanding. CLIP's text-encoder transforms natural language prompts into class level or dense, high-dimensional embeddings that can be directly compared with image embeddings in a shared latent space. Trained on hundreds of millions of image–text pairs, the CLIP text encoder captures rich semantic information, enabling models to align textual descriptions with corresponding visual content effectively, making it widely used in text-to-image generation tasks.
+
+
+**T5 Text Encoder.** 
+T5 (Text-To-Text Transfer Transformer) [^raffel2020exploring] is a versatile language model developed by Google that frames all NLP tasks (e.g., translation, summarization, and question answering) as text-to-text problems. Its text encoder converts input text into contextualized embeddings using a Transformer-based architecture trained over massive language corpora. Unlike CLIP’s text encoder, which is trained jointly with an image encoder to produce embeddings aligned with visual features for contrastive learning, T5 is trained purely on textual data and optimized for language understanding and generation. This makes T5 well-suited for providing rich, token-level semantic representations even for long and complex textual prompmts.
+
+Below, we outline all the required inputs and describe how the model processes them in preparation for the refinement stage. The pipeline's inputs are:
+
+- **text:** textual prompt guides the image generation process to enforce specified features or qualities.
 - **guidance_scale:** controls the strength of conditioning.
-- **num_inference_steps:** how many sampling steps should be performed.
-- **resolution:** what should be the generated image's spatial resolution (height, width).
+- **num_inference_steps:** how many iterative sampling steps should be performed.
+- **resolution:** Specifies the spatial resolution (height and width) of the generated image.
 
-Once initiated with those inputs, they are preprocessed as follows:
+Once initiated with those inputs, they are being preprocessed as follows (notations are borrowed from the official implementation by *diffusers* [^diffusers2022]):
 
 - **text:** The textual prompt is being encoded using two pre-trained text encoders:  
   - T5: provides dense (per token) embeddings, denoted *encoder hidden states*
@@ -103,19 +112,21 @@ Once initiated with those inputs, they are preprocessed as follows:
 The image-token grid is further downsampled to dimensions $$(h//2, w//2)$$, and each token is assigned a unique identifier of the form $$(t, \hat{h}, \hat{w})$$, where $$\hat{h} \in [0:h-1]$$ and $$\hat{w} \in [0:w-1]$$, indicating the token’s location on a 2D spatial grid.  
 *text_ids* are initiated using the same structure of *img_ids*, but with $$t = h = w = 0$$ for all tokens. Formally, $$\text{text_ids} = n \cdot (0,0,0)$$ where $$n$$ is the maximal number of tokens in T5 (512).
 
-Let $$\Phi = [\text{encoder_hidden_states}, \text{pooled_projection}, \text{guidance}, \text{img_ids}, \text{text_ids}]$$ be the pre-processed pipeline inputs. Same as in Diffusion Models, $$[z_t, t, \Phi]$$ are iteratively fed into the transformer during inference sampling, such that:
+### Iterative Refinement and Post-processing
+
+Let $$\Phi = [\text{encoder_hidden_states}, \text{pooled_projection}, \text{guidance}, \text{img_ids}, \text{text_ids}]$$ be a set the pre-processed pipeline's inputs. Same as in Diffusion Models, $$[z_t, t, \Phi]$$ are iteratively fed into the transformer during inference sampling, such that:
 
 $$
 \forall t \in \text{timesteps}: \quad z_{t+\Delta t} = \text{Samp}\bigl(v_\theta(z_t, t, \Phi)\bigr)
 $$
 
-Where $$v_\theta$$ is the trainable network that estimates the velocity vector (see [Rectified Flow](#rectified-flows)) and $$\text{Samp}(\cdot)$$ refers to the Flow-Matching Euler Discrete sampler [^lipman2022flow]. Note that the notation here differs from the one used in Diffusion Models. Here timesteps range between 0 and 1, with $$z_1$$ the clear image and $$z_0$$ the pure Gaussian noise.
+Where $$v_\theta$$ is the trainable network that estimates the velocity vector (see [Rectified Flow](#rectified-flows)) and $$\text{Samp}(\cdot)$$ refers to the Flow-Matching Euler Discrete sampler [^lipman2022flow]. Pay attention to the notation that differs from the one used in Diffusion Models. Here timesteps range between $$0$$ and $$1$$, with $$z_1$$ the clear image and $$z_0$$ the pure Gaussian noise. In Section [Transformer]("Flux.1-Tranformer") we explore the architecture of $$v_\theta$$.
 
-The final clean latent $$z_1$$ is decoded via a pre-trained VAE model to get the final image $$x_1$$. In the next section, we explore the architecture of $$v_\theta$$.
+After the iterative refinement, the final clean latent $$z_1$$ is decoded via pre-trained *VAE* model to get the final image $$x_1$$. 
 <br>
 
 ## Transformer
-<a name="transformer"></a>
+<a name="Flux.1-Tranformer"></a>
 
 The core component of FLUX.1’s synthesis pipeline is the velocity predictor $$v_\theta$$, which is optimized to estimate the velocity vector along the sampling trajectory (see Section [Rectified Flows](#rectified-flows)). Similar to SD3 [^esser2024scaling], FLUX.1 replaces the conventional *U-Net* architecture with a ffully transformer-based design. A high-level overview of the transformer’s operations at each sampling step is provided in Figure [5]("figure-5"). In this section, we describe the primary building blocks that constitute this transformer architecture.
 
@@ -229,6 +240,6 @@ In summary, Single-Stream blocks emphasize efficiency and simplicity through par
 [^FLUXAnnounce]: [Black-Forest-Labs official FLUX.1 announcement](https://bfl.ai/announcements/24-08-01-bfl), (2024). 
 [^rombach2022high]:Rombach, Robin, et al. "High-resolution image synthesis with latent diffusion models." (2022).
 [^esser2024scaling]: Esser, Patrick, et al. "Scaling rectified flow transformers for high-resolution image synthesis." (2024).
-[^diffusers2022]: Von Platen, Patrick and Patil, Suraj et al., ["Diffusers: State-of-the-art diffusion models"]["https://github.com/huggingface/diffusers"] (2022) 
+[^diffusers2022]: Von Platen, Patrick and Patil, Suraj et al., ["Diffusers: State-of-the-art diffusion models"][(https://github.com/huggingface/diffusers) (2022) 
 []‏
 ‏
