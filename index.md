@@ -16,9 +16,7 @@ permalink: /
 # An unofficial documentation of FLUX.1 text-to-image architecture
 > ⚠️ This is an **unofficial** and **reverse-engineered** documentation project. It is not affiliated with the original authors or organizations behind FLUX.1.
 
-[Or Greenberg]<sup>1,2</sup>&nbsp;&nbsp;&nbsp;
-
-[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/or-greenberg/) [![Google Scholar](https://img.shields.io/badge/Google%20Scholar-4285F4?style=for-the-badge&logo=google-scholar&logoColor=white)](https://scholar.google.com/citations?user=p6tIB6UAAAAJ&hl=iw)
+[Or Greenberg](https://img.shields.io/badge/Google%20Scholar-4285F4?style=for-the-badge&logo=google-scholar&logoColor=white)](https://scholar.google.com/citations?user=p6tIB6UAAAAJ&hl=iw)<sup>1,2</sup>&nbsp;&nbsp;&nbsp;
 
 <div>
 <sup>1</sup> General Motors R&D &nbsp;|&nbsp; <sup>2</sup> Hebrew University of Jerusalem, Israel
@@ -31,7 +29,7 @@ permalink: /
 
 <br/>
 
-If you find this work useful, please cite our [technical report](TODO) and [give this repo a star ⭐](https://github.com/OrGreenberg/DemystifyingFlux/stargazers):
+If you find this work useful, please cite our [technical report](TODO) and [give this repo a star ⭐](https://github.com/OrGreenberg/DemystifyingFlux/stargazers)
 <br/>
 
 ![image](https://github.com/user-attachments/assets/7136918d-0356-4cca-a516-b88de55bf327)
@@ -56,7 +54,6 @@ If you find this work useful, please cite our [technical report](TODO) and [give
 <br>
 ## 💬 Contribute to the blog!
 - Please report issues or point at new FLUX releases in the blog's [GitHub issues](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
-
 - Do you want to discuss FLUX? Ask question? You can do that in the blog's [discussion](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
 
 ---
