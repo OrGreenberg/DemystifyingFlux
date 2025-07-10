@@ -24,7 +24,7 @@ If you find this work useful, please cite our [technical report](TODO) and [give
 <br>
 
 
-![image](https://github.com/user-attachments/assets/7136918d-0356-4cca-a516-b88de55bf327)
+![image](assets/Picture1.png)
 <br>
 
 ---
