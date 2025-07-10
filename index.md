@@ -12,13 +12,13 @@ permalink: /
 
 <div style="text-align: center;" markdown="1">
 
+## **Demystifying Flux.1**
+# An unofficial documentation of FLUX.1 text-to-image architecture
 
 [Or Greenberg](https://scholar.google.com/citations?user=p6tIB6UAAAAJ&hl=iw)<sup>1,2</sup>&nbsp;&nbsp;&nbsp;
 <sup>1</sup> General Motors R&D &nbsp;|&nbsp; <sup>2</sup> Hebrew University of Jerusalem, Israel
 <br/>
 
-## **Demystifying Flux.1**
-# An unofficial documentation of FLUX.1 text-to-image architecture
 > ⚠️ This is an **unofficial** and **reverse-engineered** documentation project. It is not affiliated with the original authors or organizations behind FLUX.1.
 
 <br>
