@@ -22,19 +22,6 @@ permalink: /
 <sup>1</sup> General Motors R&D &nbsp;|&nbsp; <sup>2</sup> Hebrew University of Jerusalem, Israel
 </div>
 
-<br/>
-
-<div style="background-color: #e0f7fa; padding: 20px;">
-  <h2>This region has a background color</h2>
-  <p>Only this part of the page is styled.</p>
-</div>
-
-<p>This part is outside the colored region.</p>
-
-[![arXiv](https://img.shields.io/badge/arXiv-Preprint%20TODO-darkred)](https://arxiv.org/abs/YOUR_PAPER_ID_HERE) <!-- TODO: Update with actual arXiv ID --> 
-
-<br/>
-
 If you find this work useful, please cite our [technical report](TODO) and [give this repo a star ⭐](https://github.com/OrGreenberg/DemystifyingFlux/stargazers)
 <br/>
 
