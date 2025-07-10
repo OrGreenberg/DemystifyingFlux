@@ -16,6 +16,7 @@ permalink: /
 # An unofficial documentation of FLUX.1 text-to-image architecture
 
 [Or Greenberg](https://scholar.google.com/citations?user=p6tIB6UAAAAJ&hl=iw)<sup>1,2</sup>&nbsp;&nbsp;&nbsp;
+<br>
 <sup>1</sup> General Motors R&D &nbsp;|&nbsp; <sup>2</sup> Hebrew University of Jerusalem, Israel
 <br/>
 
