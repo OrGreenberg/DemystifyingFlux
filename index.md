@@ -16,7 +16,7 @@ permalink: /
 # An unofficial documentation of FLUX.1 text-to-image architecture
 > ⚠️ This is an **unofficial** and **reverse-engineered** documentation project. It is not affiliated with the original authors or organizations behind FLUX.1.
 
-[Or Greenberg](https://img.shields.io/badge/Google%20Scholar-4285F4?style=for-the-badge&logo=google-scholar&logoColor=white)](https://scholar.google.com/citations?user=p6tIB6UAAAAJ&hl=iw)<sup>1,2</sup>&nbsp;&nbsp;&nbsp;
+[Or Greenberg](https://scholar.google.com/citations?user=p6tIB6UAAAAJ&hl=iw)<sup>1,2</sup>&nbsp;&nbsp;&nbsp;
 
 <div>
 <sup>1</sup> General Motors R&D &nbsp;|&nbsp; <sup>2</sup> Hebrew University of Jerusalem, Israel
@@ -24,6 +24,12 @@ permalink: /
 
 <br/>
 
+<div style="background-color: #e0f7fa; padding: 20px;">
+  <h2>This region has a background color</h2>
+  <p>Only this part of the page is styled.</p>
+</div>
+
+<p>This part is outside the colored region.</p>
 
 [![arXiv](https://img.shields.io/badge/arXiv-Preprint%20TODO-darkred)](https://arxiv.org/abs/YOUR_PAPER_ID_HERE) <!-- TODO: Update with actual arXiv ID --> 
 
