@@ -3,6 +3,13 @@ layout: default
 title: "Background"
 permalink: /background/
 ---
+
+<style>
+  body {
+    background-color: #f0f0f0; /* light gray */
+  }
+</style>
+
 ---
 To better understand the foundations of FLUX.1, we briefly present several key models and methods that preceded it and influenced its design. This overview is intentionally high-level, aiming only to provide the essential background necessary to grasp the core principles behind FLUX. For readers interested in a deeper exploration of these foundational works, references to the original papers and technical reports are provided throughout this section.
 
