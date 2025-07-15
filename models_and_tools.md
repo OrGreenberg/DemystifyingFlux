@@ -17,9 +17,12 @@ permalink: /models-and-tools/
 # **Model and Tools**
 ---
 </div>
+<br>
 
 Below is a list of the currently available models in the FLUX family. We divide them into [Text-to-Image models](#text-to-image), and [tools](#tools) which provide additional capabilities such as image editing, spatial guidance, and image variation. While new models are being released rapidly, this list is current as of June 5, 2025. You can contribute to this blog by suggesting newly released models via the blog's [GitHub Issues](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
 
+---
+<br>
 ## text-to-image
 <a name="text-to-image"></a>
 
@@ -37,6 +40,8 @@ The FLUX.1 suite of text-to-image models comes in three variants, all share the 
 - **FLUX1.1[pro]**  
   An enhanced version of the FLUX.1[pro] model, capable of faster image generation while also improving image quality, prompt adherence, and diversity. The model introduces new modes—**Ultra**, enabling 4× higher resolution without compromising speed, and **Raw**, producing hyper-realistic, candid-style images. Additionally, a prompt upsampling feature leverages large language models (LLMs) to expand and enrich user prompts, enhancing creative outputs. While not covered in this report, FLUX 1.1 Pro is available via API on platforms like Replicate and Fal.ai, with commercial licensing required.
 
+---
+<br>
 ## tools
 <a name="tools"></a>
 
