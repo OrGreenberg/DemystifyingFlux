@@ -13,7 +13,8 @@ permalink: /flux-architecture/
 <div style="text-align: center;" markdown="1">
 
 # **FLUX.1 Architecture**
-<\div>
+---
+</div>
 
 ## Introduction
 
