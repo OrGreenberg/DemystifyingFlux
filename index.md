@@ -25,7 +25,7 @@ permalink: /
 
 <br>
 
-If you find this work useful, please cite our [technical report]([TODO](https://arxiv.org/abs/2507.09595)) and [give this repo a star ⭐](https://github.com/OrGreenberg/DemystifyingFlux/stargazers)
+If you find this work useful, please cite our [technical report](https://arxiv.org/abs/2507.09595) and [give this repo a star ⭐](https://github.com/OrGreenberg/DemystifyingFlux/stargazers)
 <br>
 
 
