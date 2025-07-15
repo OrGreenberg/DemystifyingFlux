@@ -3,6 +3,13 @@ layout: default
 title: "Model and Tools"
 permalink: /models-and-tools/
 ---
+
+<style>
+  body {
+    background-color: #f0f0f0; /* light gray */
+  }
+</style>
+
 <a name="sec:hub"></a>
 
 Below is a list of the currently available models in the FLUX family. We divide them into [Text-to-Image models](#text-to-image), and [tools](#tools) which provide additional capabilities such as image editing, spatial guidance, and image variation. While new models are being released rapidly, this list is current as of June 5, 2025. You can contribute to this blog by suggesting newly released models via the blog's [GitHub Issues](https://github.com/OrGreenberg/DemystifyingFlux/issues) page.
