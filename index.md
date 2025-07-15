@@ -25,7 +25,7 @@ permalink: /
 
 <br>
 
-If you find this work useful, please cite our [technical report](TODO) and [give this repo a star ⭐](https://github.com/OrGreenberg/DemystifyingFlux/stargazers)
+If you find this work useful, please cite our [technical report]([TODO](https://arxiv.org/abs/2507.09595)) and [give this repo a star ⭐](https://github.com/OrGreenberg/DemystifyingFlux/stargazers)
 <br>
 
 
@@ -58,10 +58,11 @@ If you find this work useful, please cite our [technical report](TODO) and [give
 ## 📝 Citation
 
 ```bibtex
-@InProceedings{TODO,
+@article{greenebrg2025demystifying,
     title     = {Demystifying Flux Architecture}, 
     author    = {Or Greenebrg},
-    year      = {2025},
+    eprint    = {2507.09595},
+    archivePrefix      = {2025},
     booktitle = {arXiv}
 }
 ```
