@@ -20,25 +20,25 @@ permalink: /flux-architecture/
 
 **FLUX.1** [^flux2024] is a Rectified-Flow transformer trained in the latent space of an image encoder, introduced by **Black Forest Labs** in August 2024.
 
-The FLUX.1 models (see [Section: Hub](#sec-hub)) demonstrate State-of-the-art (SoTA) performance for text-to-image tasks, in both terms of output quality and image-text alignment, as demonstrated in Figures [1](#figure-1) and [2](#figure-2) using the ELO-score metric, which ranks image generation models based on human preferences in head-to-head comparisons.
+The FLUX.1 models demonstrate State-of-the-art (SoTA) performance for text-to-image tasks, in both terms of output quality and image-text alignment, as demonstrated in Figures [1](#figure-1) and [2](#figure-2) using the ELO-score metric, which ranks image generation models based on human preferences in head-to-head comparisons.
 
+<a name="figure-1"></a>
 ![FLUX.1 defines a new state-of-the-art in image detail, prompt adherence, style diversity and scene complexity for text-to-image synthesis. Evaluation from FLUXAnnounce](assets/flux_score1.jpg)  
 **Figure 1.** FLUX.1 defines a new state-of-the-art in image detail, prompt adherence, style diversity and scene complexity for text-to-image synthesis. Evaluation from [^FLUXAnnounce] 
-<a name="figure-1"></a>
 <br>
 
+<a name="figure-2"></a>
 ![ELO scores for different aspects: Prompt Following, Size/Aspect Variability, Typography, Output Diversity, Visual Quality. Evaluation from FLUXAnnounce](assets/flux_score2.jpg)  
 **Figure 2**  ELO scores for different aspects: Prompt Following, Size/Aspect Variability, Typography, Output Diversity, Visual Quality. Evaluation from [^FLUXAnnounce]
-<a name="figure-2"></a>
 <br>
 
 While the model adheres to the Rectified Flow training paradigm (according to the developers statement), the exact details regarding the training setup —including the dataset, scheduling strategy, and hyperparameters— have not been publicly disclosed. However, the model’s architecture and inference scheme can be reverse-engineered from the publicly available inference code. 
 
 In this section, we outline the model’s architecture to demystify its behavior at inference time. A top-view of the architecture is illustrated in Figure [3](#figure-3), where text embeddings and latent image embeddings are iteratively processed via a series of attention blocks. In the following section we deep-dive into the different components of the model.
 
+<a name="figure-3"></a>
 ![High-level overview of the FLUX.1 architecture. Text embeddings and latent image embeddings are iteratively processed through a series of attention blocks to generate a text-conditioned image. ](assets/top-view.jpg)  
 **Figure 3.** High-level overview of the FLUX.1 architecture. Text embeddings and latent image embeddings are iteratively processed through a series of attention blocks to generate a text-conditioned image. 
-<a name="figure-3"></a>
 <br>
 
 In the following section we deep-dive into the different components of the model. We begin with a high-level overview of FLUX’s sampling pipeline in [FLUX.1 Sampling Pipeline](#pipeline-architecture), highlighting the key stages and the pre-trained components involved, followed by a deep-dive into the transformer's architecture in [Transformer](#transformer), where a detailed explanation is provided to the different stages and concepts used to construct it.
@@ -55,9 +55,9 @@ Similar to LDM [^rombach2022high], FLUX operates in a latent space, where the fi
 
 The sampling pipeline consists of three phases: $$(1)$$ *Initiation and Pre-processing* $$(2)$$ *Iterative Refinement*, and $$(3)$$ *Post-processing*. An overview of these steps is illustrated in Figure [4]("figure-4"), where the notations follows the ones used in the official implementation of FLUX.1 pipeline in the *diffusers* [^diffusers2022] library.
 
+<a name="figure-4"></a>
 ![Flux pipeline: high-level overview. Just like in Diffusion Models, after pre-processing the noisy latent $$z_t$$ (denoted *hidden_state*$_t$) is iteratively refined in the latent space, the final refined $$z_0$$ (=*hidden_states*$_0$) is decoded into an RGB image using a pre-trained VAE decoder.](assets/pipeline.jpg)  
 **Figure 4** Flux pipeline: high-level overview. Just like in Difussion Models, after pre-processing the noisy latent $z_t$ (denoted *hidden\_state*$_t$) is being iteratively refined in the latent space, the final refined $$z_0$$ ($$=$$*hidden\_states*$$_0$$) is decoded into an RGB image using a pre-trained VAE decoder.
-<a name="figure-4"></a>
 <br>
 
 In the section below, we primarily focus on the *Initiation and Pre-processing* phase of the pipeline. A brief overview  of the *Iterative Refinement* and *Post-processing* phases is provided at the end of this section. The *Iterative Refinement* phase, in which the FLUX transformer operates, is discussed in detail in Section [Transformer]("Flux.1-Tranformer").
@@ -117,9 +117,9 @@ The core component of FLUX.1’s synthesis pipeline is the velocity predictor $$
 
 A high-level overview of the transformer’s operations at each sampling step is provided in Figure [5]("figure-5") using the notation defined in the official implementation by *diffusers* [^diffusers2022]. 
 
+<a name="figure-5"></a>
 ![Flux Transformer: high-level overview](assets/transformer.jpg)
 **Figure 5** Flux Transformer: high-level overview.
-<a name="figure-5"></a>
 <br>
 
 On every iteration, the inputs are preprocessed before they ate fed into a sequence of transformer blocks. 
@@ -138,9 +138,9 @@ Along the sampling trajectory, the transformer is called multiple times, once at
 
 These parameters join the ``constant" inputs (which remain constant across different iterations) pre-calcualted in the pipeline's pre-process stage (See section [Initiation and Pre-processing]("sec-init")). The transformer pre-processes it's inputs internally as described in Figure [6]("figure-6"):
 
+<a name="figure-6"></a>
 ![Flux Transformer: per-step inputs preprocess](assets/t_preprocess.jpg)
 **Figure 6** Flux Transformer: per-step inputs preprocess
-<a name="figure-6"></a>
 <br>
 
 Formally, the following steps are taken:
@@ -161,21 +161,21 @@ After preprocess, a series of *19* Double-Stream Transformer blocks are applied.
 Those blocks employ seperate weights for image and text tokens (see Figure [7a]("figure-7a")). Multi-modality is achieved by applying the attention operation over the concatenation of the tokens (see Figure [7b]("figure-7b")).
 
 <br>
+<a name="figure-7a"></a>
 ![Double-Attention Block: latent and prompt embeddings are processed separately, in a standard attention scheme.](assets/double_stream.jpg)
 **Figure 7a.** Double-Stream Attention Block: latent and prompt embeddings are processed separately, in a standard multi-modal attention scheme.
-<a name="figure-7a"></a>
 <br>
 
+<a name="figure-7b"></a>
 ![The attention operation is applied over the concatenation of the tokens.](assets/double_attention.jpg)
 **Figure 7b.** The attention operation is applied over the concatenation of the tokens.
-<a name="figure-7b"></a>
 <br>
 
 Each stream (latent and prompt) uses  Adaptive Layer Normalization (AdaLN) [^keddous2024vision] layers for normalization and modulation (see Figure [7a]("figure-7a") and in details in Figure [8]("figure-8")).
 
+<a name="figure-8"></a>
 ![AdaLN layer, where MSA (Multi-head Self Attention) and MLP (Multi-Layer Processor) modulation parameters are computed based on the input tensor. In Single-Stream block, MLP modulation is not computed.](assets/ADALN.jpg)  
 **Figure 8** AdaLN layer, where MSA (Multi-head Self Attention) and MLP (Multi-Layer Processor) modulation parameters are computed based on the input tensor. In Single-Stream block (see Section [Single-Srteam Transformer Block]("single-block")), MLP modulation is not computed. 
-<a name="figure-8"></a>
 
 AdaLN is a conditioning mechanism used in Transformer-based models [^nichol2021glide] [^sauer2023stylegan] to modulate intermediate activations based on external input, such as text or image embeddings, based on the Adaptive Instance Normalization (AdaIN) mechanism proposed in to modulate intermediate activations based on external input, such as text or image embeddings, based on the Adaptive Instance Normalization (AdaIN)[^huang2017arbitrary]. Unlike standard Layer Normalization, which applies fixed scaling and shifting parameters, AdaLN dynamically generates these parameters as functions of a conditioning vector (see Figure [8]("figure-8")). This allows the model to adapt its behavior at each layer according to the input prompt or guidance signal.
 
@@ -193,27 +193,27 @@ After the series of Double-Stream blocks is applied, the processed latent and pr
 While the Double-Stream blocks apply different weights for prompt and latent embeddings, the Single-Stream blocks use a single set of weights to process a concatenated tensor or latent and text embeddings (see Figure [9a]("figure-9a")). In addition, the Single-Stream blocks replace the standard sequential attention block (where an MLP, like Feed-Forward is applied after the attention step), with a parallel mechanism where the attention block and an MLP are computed simultaneously from the same input.
 
   
+<a name="figure-9a"></a>
 ![Single-Attention Block: latent and prompt embeddings are processed together, in a simultaneous attention scheme.](assets/single_stream.jpg)
 **Figure 9a.** Single-Attention Block: latent and prompt embeddings are processed together, in a simultaneous attention scheme.
-<a name="figure-9a"></a>
 <br>
 
+<a name="figure-9b"></a>
 ![The matrices are computed directly from the concatenated representation.](assets/single_attention.jpg)
 **Figure 9b.** The $$K$$, $$Q$$ and $$V$$ metrices are computed directly from the concatenated representation.
-<a name="figure-9b"></a>
 <br>
 
 This "parallal attention" mechanism should not be confused with the multi-modal attention mechanism, which is used in both Double-Stream and Single-Stream blocks, where self-attention and cross-attention are computed jointly in parallel (see Figures [7b]("figure-7b") and [9b]("figure-9b")).
 
 A comparison between the Double-Stream and Single-Stream blocks is summarized in Table [1]("table-1"):
 
+<a name="table-1"></a>
 | Property           | Double-Stream Block                                                                 | Single-Stream Block                                                           |
 |--------------------|------------------------------------------------------------------------------------|-------------------------------------------------------------------------------|
 | **Weight Sharing**  | Uses separate weights for text and latent tokens in both attention and feedforward layers. | Uses shared weights for both text and latent tokens across attention and feedforward layers. |
 | **Computation Style**  | Attention and feedforward (MLP) layers are applied sequentially, where the attention's output defines the feedforward's input. | Attention and feedforward layers are computed in parallel using the same input for both. |
 
 **Table 1:** Comparison between Double-Stream and Single-Stream blocks in FLUX.1
-<a name="table-1"></a>
 <br>
 
 Specifically, the Double-Stream and Single-Stream blocks differ in two main attributes: weight sharing between text and latent tokens (shared vs. not shared), and computation style (sequential vs. parallel). While the exact motivation behind the FLUX.1 developers choice of this specific architecture is not documented, the following is a brief comparison of these attributes, highlighting the possible pros and cons of each, potentially shedding light on the reasoning behind including both block types in FLUX.1's architecture.
