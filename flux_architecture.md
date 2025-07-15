@@ -4,6 +4,12 @@ title: "FLUX.1 Architecture"
 permalink: /flux-architecture/
 ---
 
+<style>
+  body {
+    background-color: #f0f0f0; /* light gray */
+  }
+</style>
+
 # FLUX.1 Architecture
 
 ## Introduction
